@@ -1,15 +1,13 @@
 import 'dart:io';
-
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text_my_app/calculator_screen.dart';
 import 'package:speech_to_text_my_app/projekt1_screen.dart';
 import 'package:speech_to_text_my_app/emails_screen.dart';
 import 'package:speech_to_text_my_app/locations_screen.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
+import 'package:speech_to_text_my_app/widgets/menu_button.dart';
+import 'package:speech_to_text_my_app/widgets/mic_button.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,140 +59,57 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
     Locale appLocale = Localizations.localeOf(context);
     print('appLocale = $appLocale');
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Speech to text'),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isChosenDE = true;
-                  isChosenEN = false;
-                  SpeechApi.currentLocaleId = 'de_DE';
-                });
-              },
-              child: Text(
-                'DE',
-                style: TextStyle(fontWeight: FontWeight.bold, color: isChosenDE == true ? Colors.black : Colors.white),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: GestureDetector(
-              child: Text('EN',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isChosenEN == true ? Colors.black : Colors.white,
-                  )),
-              onTap: () {
-                setState(() {
-                  isChosenDE = false;
-                  isChosenEN = true;
-                  SpeechApi.currentLocaleId = 'en_EN';
-                });
-              },
-            ),
-          )
-        ],
-      ),
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, 'emails');
-                print('$itemName1 pushed!!!');
-              },
-              child: Container(
-                height: 110,
-                width: 110,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  border: Border.all(width: 2, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                child: Center(
-                  child: Text(
-                    SpeechApi.currentLocaleId == 'en_EN' ? 'Emails' : itemName1,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+        appBar: AppBar(
+          title: const Text('Speech to text'),
+          centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isChosenDE = true;
+                    isChosenEN = false;
+                    SpeechApi.currentLocaleId = 'de_DE';
+                  });
+                },
+                child: Text(
+                  'DE',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: isChosenDE == true ? Colors.black : Colors.white),
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () => Navigator.pushNamed(context, 'projekt1'),
-              child: Container(
-                height: 110,
-                width: 110,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  border: Border.all(width: 2, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                child: Center(
-                    child: Text(
-                  SpeechApi.currentLocaleId == 'en_EN' ? 'Project1' : itemName2,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                )),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GestureDetector(
+                child: Text('EN',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isChosenEN == true ? Colors.black : Colors.white,
+                    )),
+                onTap: () {
+                  setState(() {
+                    isChosenDE = false;
+                    isChosenEN = true;
+                    SpeechApi.currentLocaleId = 'en_EN';
+                  });
+                },
               ),
-            ),
-            GestureDetector(
-              onTap: () => {Navigator.pushNamed(context, 'locations'), print('$itemName3 pushed!!!')},
-              child: Container(
-                height: 110,
-                width: 110,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  border: Border.all(width: 2, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                      child: Text(
-                    SpeechApi.currentLocaleId == 'en_EN' ? 'mk locations' : itemName3,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  )),
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.pushNamed(context, 'calculator'),
-              child: Container(
-                height: 110,
-                width: 110,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  border: Border.all(width: 2, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                child: Center(
-                    child: Text(
-                  SpeechApi.currentLocaleId == 'en_EN' ? 'Calculator' : itemName4,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                )),
-              ),
-            ),
+            )
           ],
         ),
-      ),
-      floatingActionButton: AvatarGlow(
-        animate: isListening,
-        endRadius: 75,
-        glowColor: Theme.of(context).primaryColor,
-        duration: const Duration(milliseconds: 2000),
-        repeatPauseDuration: const Duration(microseconds: 100),
-        repeat: true,
-        child: FloatingActionButton(
-          onPressed: () => toggleRecording(context),
-          child: Icon(isListening ? Icons.mic : Icons.mic_none, size: 36),
+        body: Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              MenuButton(itemName: itemName1, routeName: 'emails', engName: 'Emails', language: 'en_EN'),
+              MenuButton(itemName: itemName2, routeName: 'projekt1', engName: 'Project1', language: 'en_EN'),
+              MenuButton(itemName: itemName3, routeName: 'locations', engName: 'mk locations', language: 'en_EN'),
+              MenuButton(itemName: itemName4, routeName: 'calculator', engName: 'Calculator', language: 'en_EN')
+            ],
+          ),
         ),
-      ),
-    );
+        floatingActionButton: micButton(context, toggleRecording, isListening));
   }
 }

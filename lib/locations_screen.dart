@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
+import 'package:speech_to_text_my_app/widgets/mic_button.dart';
 
 class LocationsScreen extends StatefulWidget {
   const LocationsScreen({Key? key}) : super(key: key);
@@ -57,14 +58,6 @@ class _LocationsScreenState extends State<LocationsScreen> with VoiceLogic {
             ],
           ),
         ),
-        floatingActionButton: AvatarGlow(
-          animate: isListening,
-          endRadius: 75,
-          glowColor: Theme.of(context).primaryColor,
-          child: FloatingActionButton(
-            onPressed: () => toggleRecording(context),
-            child: Icon(isListening ? Icons.mic : Icons.mic_none, size: 36),
-          ),
-        ));
+        floatingActionButton: micButton(context, toggleRecording, isListening));
   }
 }

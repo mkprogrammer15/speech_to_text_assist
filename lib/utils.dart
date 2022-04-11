@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:math';
 
 class Command {
   static final all = <String>[openDE, goBackDE, sortDE, filterDE, writeDE];
 
   static const openDE = 'öffne';
   static const goBackDE = 'gehe zurück';
-  static const sortDE = 'sortiere';
+  static const sortDE = 'alphabetisch';
   static const filterDE = 'zeige';
   static const writeDE = 'schreibe';
   static const chooseDE = 'wähle';
-  static const tipDE = 'tippe';
+  static const tipDE = 'notiere';
 
   static const openEN = 'open';
   static const goBackEN = 'go back';
@@ -195,7 +194,7 @@ mixin Utils {
     }
     switch (newText) {
       case locationsScreen:
-        Navigator.pushReplacementNamed(context, 'locations');
+        Navigator.pushNamed(context, 'locations');
         break;
       case calculatorDE:
         Navigator.pushNamed(context, 'calculator');
@@ -299,34 +298,8 @@ mixin Utils {
         spokenList.remove(match);
       }
     }
-    print(matchIntentsList);
-    print(spokenList);
 
     var maap = Map<String, String>.fromIterables(matchIntentsList, spokenList);
-    print(maap);
-    // VoiceLogic.emailFocusNode.requestFocus();
-    // VoiceLogic.emailController.text = maap['e-mail'].toString();
-    // VoiceLogic.nameFocusNode.requestFocus();
-    // VoiceLogic.nameController.text = maap['name'].toString();
-    // VoiceLogic.addressFocusNode.requestFocus();
-    // VoiceLogic.addressController.text = maap['adresse'].toString();
-    // VoiceLogic.amountPersonsFocusNode.requestFocus();
-    // VoiceLogic.amountController.text = maap['summe personen'].toString();
-    // VoiceLogic.birthDayFocusNode.requestFocus();
-    // VoiceLogic.birthDayController.text = maap['geburtstag'].toString();
-    // VoiceLogic.idFocusNode.requestFocus();
-    // VoiceLogic.idController.text = maap['id'].toString();
-    // VoiceLogic.phoneFocusNode.requestFocus();
-    // VoiceLogic.phoneController.text = maap['telefon'].toString();
-
-    // for (final itemKey in maap.entries) {
-    //   MultiTextFieldModel._multiFieldData.indexWhere((element) {
-    //     element.fieldName == itemKey.key;
-    //     element.controller = itemKey.value;
-    //     element.isActive = true;
-    //     return true;
-    //   });
-    // }
 
     for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
       MultiTextFieldModel._multiFieldData[i].isActive = false;
@@ -398,8 +371,6 @@ mixin Utils {
       await launch(url);
     }
   }
-
-  static void tip({required String body}) {}
 }
 
 class MultiTextFieldModel {

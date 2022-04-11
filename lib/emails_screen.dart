@@ -2,6 +2,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/utils.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
+import 'package:speech_to_text_my_app/widgets/mic_button.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 class EmailsScreen extends StatefulWidget {
@@ -45,18 +46,7 @@ class _EmailsScreenState extends State<EmailsScreen> with VoiceLogic {
           ),
         ),
       ),
-      floatingActionButton: AvatarGlow(
-        animate: isListening,
-        endRadius: 75,
-        glowColor: Theme.of(context).primaryColor,
-        duration: const Duration(milliseconds: 2000),
-        repeatPauseDuration: const Duration(microseconds: 100),
-        repeat: true,
-        child: FloatingActionButton(
-          onPressed: () => toggleRecording(context),
-          child: Icon(isListening ? Icons.mic : Icons.mic_none, size: 36),
-        ),
-      ),
+      floatingActionButton: micButton(context, toggleRecording, isListening),
     );
   }
 }
