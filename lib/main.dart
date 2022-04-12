@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shake/shake.dart';
 import 'package:speech_to_text_my_app/calculator_screen.dart';
 import 'package:speech_to_text_my_app/projekt1_screen.dart';
 import 'package:speech_to_text_my_app/emails_screen.dart';
@@ -52,6 +53,15 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
   bool isChosenEN = false;
 
   final String defaultLocale = Platform.localeName;
+
+  @override
+  void initState() {
+    super.initState();
+    ShakeDetector detector = ShakeDetector.autoStart(onPhoneShake: () {
+      toggleRecording(context);
+    });
+    detector.onPhoneShake;
+  }
 
   @override
   Widget build(BuildContext context) {

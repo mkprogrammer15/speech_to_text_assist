@@ -6,12 +6,14 @@ class Command {
   static final all = <String>[openDE, goBackDE, sortDE, filterDE, writeDE];
 
   static const openDE = 'öffne';
-  static const goBackDE = 'gehe zurück';
+  static const goBackDE = 'zurück';
   static const sortDE = 'alphabetisch';
   static const filterDE = 'zeige';
   static const writeDE = 'schreibe';
   static const chooseDE = 'wähle';
   static const tipDE = 'notiere';
+  static const scrollDownDE = 'runter';
+  static const scrollUpDE = 'hoch';
 
   static const openEN = 'open';
   static const goBackEN = 'go back';
@@ -28,6 +30,19 @@ mixin Utils {
   static void scanText(String rawText, BuildContext context) {
     String text = rawText.toLowerCase();
 
+    if (text.contains(Command.scrollDownDE)) {
+      VoiceLogic.offset += 300;
+      scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
+    }
+
+    if (text.contains(Command.scrollUpDE)) {
+      if (VoiceLogic.offset <= 0) {
+        return;
+      }
+      VoiceLogic.offset -= 300;
+      scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
+    }
+
     if (text.contains(Command.openDE)) {
       _getTextAfterCommand(text: text, command: Command.openDE);
       checkSlot(context);
@@ -39,12 +54,10 @@ mixin Utils {
     }
 
     if (text.contains(Command.goBackDE)) {
-      _getTextAfterCommand(text: text, command: Command.goBackDE);
       checkSlot(context);
     }
 
     if (text.contains(Command.goBackEN)) {
-      _getTextAfterCommand(text: text, command: Command.goBackEN);
       checkSlot(context);
     }
 
@@ -181,6 +194,10 @@ mixin Utils {
     }
   }
 
+  static Future<void> scrollUpAndDown(ScrollController scrollController, double offset) async {
+    await scrollController.animateTo(offset, duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
+  }
+
   static void checkSlot(BuildContext context) {
     const String locationsScreen = 'mk locations';
     const String calculatorDE = 'rechner';
@@ -188,6 +205,7 @@ mixin Utils {
     const String projekt1 = 'projekt1';
     const String emails = 'emails';
     const String goBack = 'zurück';
+    const String goBackEN = 'go back';
 
     if (newText == 'e-mails') {
       newText = 'emails';
@@ -206,11 +224,20 @@ mixin Utils {
         Navigator.pushNamed(context, 'projekt1');
         break;
       case emails:
+        print('Öffne emails');
         Navigator.pushNamed(context, 'emails');
         break;
       case goBack:
-        Navigator.pop(context);
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
         break;
+      case goBackEN:
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+        break;
+
       default:
     }
   }
@@ -285,21 +312,22 @@ mixin Utils {
 
     List<String> keyWords = [email, name, amountPersonsDE, amountPersonsEN, phoneNumberDE, phoneNumberEN, id, birthDateDE, birthDateEN, addressDE, addressEN];
 
-    final spokenList = c.split(' ').toList();
+    String speech = c.replaceAll(' ', '');
+
+    List spokenList = <String>[];
     final matchIntentsList = <String>[];
-    for (final item in spokenList) {
-      if (keyWords.contains(item)) {
+    String speechNoCommands = speech;
+
+    for (final item in keyWords) {
+      if (speechNoCommands.contains(item)) {
         matchIntentsList.add(item);
+        speechNoCommands = speechNoCommands.replaceAll(item, '!');
       }
     }
+    speechNoCommands = speechNoCommands.replaceFirst('!', '').replaceAll(',', ' ');
+    spokenList = speechNoCommands.split('!');
 
-    for (final match in matchIntentsList) {
-      if (spokenList.contains(match)) {
-        spokenList.remove(match);
-      }
-    }
-
-    var maap = Map<String, String>.fromIterables(matchIntentsList, spokenList);
+    var maap = Map<String, String>.fromIterables(matchIntentsList, spokenList as List<String>);
 
     for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
       MultiTextFieldModel._multiFieldData[i].isActive = false;

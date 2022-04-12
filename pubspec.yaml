@@ -37,7 +37,7 @@ dependencies:
   clipboard: ^0.1.2+8
   substring_highlight: ^1.0.33
   intl: ^0.17.0
-  
+  shake: ^2.0.0
   
 
 
