@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "781692482392",
+    "project_id": "speechapp-3fe81",
+    "storage_bucket": "speechapp-3fe81.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781692482392:android:3ab6509970c3050c54ab2d",
+        "android_client_info": {
+          "package_name": "com.example.speech_to_text_my_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781692482392-cjv7j293knrartcngpj6ntjblsd4nllp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWTb9P-NQRi1QkLMglu0bf7wPfM2VRqhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781692482392-cjv7j293knrartcngpj6ntjblsd4nllp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

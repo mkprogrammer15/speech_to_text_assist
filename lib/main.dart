@@ -1,17 +1,22 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shake/shake.dart';
+import 'package:speech_to_text_my_app/bloc/textfield_bloc.dart';
 import 'package:speech_to_text_my_app/calculator_screen.dart';
 import 'package:speech_to_text_my_app/projekt1_screen.dart';
 import 'package:speech_to_text_my_app/emails_screen.dart';
 import 'package:speech_to_text_my_app/locations_screen.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
+import 'package:speech_to_text_my_app/text_field_data_remote/text_field_data_source.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 import 'package:speech_to_text_my_app/widgets/menu_button.dart';
 import 'package:speech_to_text_my_app/widgets/mic_button.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -25,14 +30,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        '/': (context) => const MyHomePage(),
-        LocationsScreen.routeName: (context) => const LocationsScreen(),
-        Projekt1Screen.routeName: (context) => const Projekt1Screen(),
-        EmailsScreen.routeName: (context) => const EmailsScreen(),
-        Calculator.routeName: (context) => const Calculator()
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TextfieldBloc>(
+          create: (context) => TextfieldBloc(textFieldDataSource: TextFieldDataSource()),
+        )
+      ],
+      child: MaterialApp(
+        routes: {
+          '/': (context) => const MyHomePage(),
+          LocationsScreen.routeName: (context) => const LocationsScreen(),
+          Projekt1Screen.routeName: (context) => const Projekt1Screen(),
+          EmailsScreen.routeName: (context) => const EmailsScreen(),
+          Calculator.routeName: (context) => const Calculator()
+        },
+      ),
     );
   }
 }
