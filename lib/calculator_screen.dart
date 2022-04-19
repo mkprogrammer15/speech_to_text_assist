@@ -37,8 +37,13 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
                           itemBuilder: (_, index) {
                             return SizedBox(
                                 width: 300,
-                                child: ListTile(
-                                  title: Text(state.textFieldList[index]),
+                                child: TextFormField(
+                                  focusNode: VoiceLogic.multiTextFieldModelList[index].focusNode,
+                                  controller: VoiceLogic.multiTextFieldModelList[index].controller,
+                                  decoration: InputDecoration(
+                                    hintText: state.textFieldList[index],
+                                    labelText: state.textFieldList[index],
+                                  ),
                                 ));
                           },
                         );
@@ -53,11 +58,13 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
                         children: [
                           ElevatedButton(
                               onPressed: () {
+                                VoiceLogic.multiTextFieldModelList.clear();
                                 BlocProvider.of<TextfieldBloc>(context).add(GetTextFieldDataEvent());
                               },
                               child: const Text('Textfields1')),
                           ElevatedButton(
                               onPressed: () {
+                                VoiceLogic.multiTextFieldModelList.clear();
                                 BlocProvider.of<TextfieldBloc>(context).add(GetTextFieldDataEvent2());
                               },
                               child: const Text('Textfields2'))

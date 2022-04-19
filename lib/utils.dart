@@ -115,62 +115,52 @@ mixin Utils {
       VoiceLogic.textFieldInput = '';
       String body = _getTextAfterCommand(text: text, command: Command.tipDE);
 
-      if (VoiceLogic.nameFocusNode.hasFocus) {
-        VoiceLogic.nameController.text = body;
-      }
-      if (VoiceLogic.emailFocusNode.hasFocus) {
-        String newBody = body.replaceAll(' ', '');
-        String lastChange = newBody.replaceAll('..', '@');
-        VoiceLogic.emailController.text = lastChange;
-      }
-      if (VoiceLogic.phoneFocusNode.hasFocus) {
-        VoiceLogic.phoneController.text = body;
-      }
-      if (VoiceLogic.addressFocusNode.hasFocus) {
-        VoiceLogic.addressController.text = body;
-      }
-      if (VoiceLogic.amountPersonsFocusNode.hasFocus) {
-        VoiceLogic.amountController.text = body;
-      }
-      if (VoiceLogic.idFocusNode.hasFocus) {
-        VoiceLogic.idController.text = body;
-      }
-      if (VoiceLogic.birthDayFocusNode.hasFocus) {
-        String someNewBody = body.replaceAll(' ', '');
-        VoiceLogic.birthDayController.text = someNewBody;
+      for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+        if (VoiceLogic.multiTextFieldModelList[i].focusNode.hasFocus) {
+          VoiceLogic.multiTextFieldModelList[i].controller.text = body;
+          if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('e-mail')) {
+            String newBody = body.replaceAll(' ', '');
+            String lastChange = newBody.replaceAll('..', '@');
+            VoiceLogic.multiTextFieldModelList[i].controller.text = lastChange;
+          }
+          if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('geburtstag')) {
+            String someNewBody = body.replaceAll(' ', '');
+            VoiceLogic.multiTextFieldModelList[i].controller.text = someNewBody;
+          }
+        }
       }
     }
 
-    if (text.contains(Command.tipEN)) {
-      VoiceLogic.textFieldInput = '';
-      String body = _getTextAfterCommand(text: text, command: Command.tipEN);
+    // if (text.contains(Command.tipEN)) {
+    //   VoiceLogic.textFieldInput = '';
+    //   String body = _getTextAfterCommand(text: text, command: Command.tipEN);
 
-      if (VoiceLogic.nameFocusNode.hasFocus) {
-        VoiceLogic.nameController.text = body;
-      }
-      if (VoiceLogic.emailFocusNode.hasFocus) {
-        String newBody = body.replaceAll(' ', '');
-        String lastChange = newBody.replaceAll('..', '@');
-        VoiceLogic.emailController.text = lastChange;
-      }
-      if (VoiceLogic.phoneFocusNode.hasFocus) {
-        VoiceLogic.phoneController.text = body;
-      }
-      if (VoiceLogic.addressFocusNode.hasFocus) {
-        VoiceLogic.addressController.text = body;
-      }
-      if (VoiceLogic.amountPersonsFocusNode.hasFocus) {
-        VoiceLogic.amountController.text = body;
-      }
-      if (VoiceLogic.idFocusNode.hasFocus) {
-        VoiceLogic.idController.text = body;
-      }
-      if (VoiceLogic.birthDayFocusNode.hasFocus) {
-        String someNewBody = body.replaceAll(' ', '');
-        final lastChange = someNewBody.replaceAll('point', '.');
-        VoiceLogic.birthDayController.text = lastChange;
-      }
-    }
+    //   if (VoiceLogic.nameFocusNode.hasFocus) {
+    //     VoiceLogic.nameController.text = body;
+    //   }
+    //   if (VoiceLogic.emailFocusNode.hasFocus) {
+    //     String newBody = body.replaceAll(' ', '');
+    //     String lastChange = newBody.replaceAll('..', '@');
+    //     VoiceLogic.emailController.text = lastChange;
+    //   }
+    //   if (VoiceLogic.phoneFocusNode.hasFocus) {
+    //     VoiceLogic.phoneController.text = body;
+    //   }
+    //   if (VoiceLogic.addressFocusNode.hasFocus) {
+    //     VoiceLogic.addressController.text = body;
+    //   }
+    //   if (VoiceLogic.amountPersonsFocusNode.hasFocus) {
+    //     VoiceLogic.amountController.text = body;
+    //   }
+    //   if (VoiceLogic.idFocusNode.hasFocus) {
+    //     VoiceLogic.idController.text = body;
+    //   }
+    //   if (VoiceLogic.birthDayFocusNode.hasFocus) {
+    //     String someNewBody = body.replaceAll(' ', '');
+    //     final lastChange = someNewBody.replaceAll('point', '.');
+    //     VoiceLogic.birthDayController.text = lastChange;
+    //   }
+    //}
   }
 
   static sortLocations() {
@@ -243,82 +233,25 @@ mixin Utils {
   }
 
   static void checkTextFieldSlot() {
-    const String email = 'email';
-    const String name = 'name';
-    const String amountPersonsDE = 'summe personen';
-    const String amountPersonsEN = 'sum persons';
-    const String phoneNumberDE = 'telefon';
-    const String phoneNumberEN = 'phone';
-    const String id = 'id';
-    const String birthDateDE = 'geburtstag';
-    const String birthDateEN = 'birthday';
-    const String addressDE = 'adresse';
-    const String addressEN = 'address';
-
     if (newText == 'e-mail') {
       newText = 'email';
     }
 
-    switch (newText) {
-      case email:
-        VoiceLogic.emailFocusNode.requestFocus();
-        break;
-      case name:
-        VoiceLogic.nameFocusNode.requestFocus();
-        break;
-      case amountPersonsDE:
-        VoiceLogic.amountPersonsFocusNode.requestFocus();
-        break;
-      case amountPersonsEN:
-        VoiceLogic.amountPersonsFocusNode.requestFocus();
-        break;
-      case phoneNumberDE:
-        VoiceLogic.phoneFocusNode.requestFocus();
-        break;
-      case phoneNumberEN:
-        VoiceLogic.phoneFocusNode.requestFocus();
-        break;
-      case id:
-        VoiceLogic.idFocusNode.requestFocus();
-        break;
-      case birthDateDE:
-        VoiceLogic.birthDayFocusNode.requestFocus();
-        break;
-      case birthDateEN:
-        VoiceLogic.birthDayFocusNode.requestFocus();
-        break;
-      case addressDE:
-        VoiceLogic.addressFocusNode.requestFocus();
-        break;
-      case addressEN:
-        VoiceLogic.addressFocusNode.requestFocus();
-        break;
-      default:
+    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+      if (VoiceLogic.multiTextFieldModelList[i].fieldName == newText) {
+        VoiceLogic.multiTextFieldModelList[i].focusNode.requestFocus();
+      }
     }
   }
 
   static void checkMultiTextFieldSlot(String c) {
-    const String email = 'e-mail';
-    const String name = 'name';
-    const String amountPersonsDE = 'summe personen';
-    const String amountPersonsEN = 'sum persons';
-    const String phoneNumberDE = 'telefon';
-    const String phoneNumberEN = 'phone';
-    const String id = 'id';
-    const String birthDateDE = 'geburtstag';
-    const String birthDateEN = 'birthday';
-    const String addressDE = 'adresse';
-    const String addressEN = 'address';
-
-    List<String> keyWords = [email, name, amountPersonsDE, amountPersonsEN, phoneNumberDE, phoneNumberEN, id, birthDateDE, birthDateEN, addressDE, addressEN];
-
     String speech = c.replaceAll(' ', '');
 
     List spokenList = <String>[];
     final matchIntentsList = <String>[];
     String speechNoCommands = speech;
 
-    for (final item in keyWords) {
+    for (final item in VoiceLogic.textFieldList) {
       if (speechNoCommands.contains(item)) {
         matchIntentsList.add(item);
         speechNoCommands = speechNoCommands.replaceAll(item, '!');
@@ -329,24 +262,43 @@ mixin Utils {
 
     var maap = Map<String, String>.fromIterables(matchIntentsList, spokenList as List<String>);
 
-    for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
-      MultiTextFieldModel._multiFieldData[i].isActive = false;
+    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+      VoiceLogic.multiTextFieldModelList[i].isActive = false;
     }
 
-    for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
+    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       for (final entry in maap.entries) {
-        if (MultiTextFieldModel._multiFieldData[i].fieldName!.contains(entry.key)) {
-          MultiTextFieldModel._multiFieldData[i].controller.text = entry.value;
-          MultiTextFieldModel._multiFieldData[i].isActive = true;
+        if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains(entry.key)) {
+          VoiceLogic.multiTextFieldModelList[i].controller.text = entry.value;
+          VoiceLogic.multiTextFieldModelList[i].isActive = true;
         }
       }
     }
 
-    for (var i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
-      if (MultiTextFieldModel._multiFieldData[i].isActive == true) {
-        MultiTextFieldModel._multiFieldData[i].requestFocus!();
+    for (var i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+      if (VoiceLogic.multiTextFieldModelList[i].isActive == true) {
+        VoiceLogic.multiTextFieldModelList[i].requestFocus!;
       }
     }
+
+    // for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
+    //   MultiTextFieldModel._multiFieldData[i].isActive = false;
+    // }
+
+    // for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
+    //   for (final entry in maap.entries) {
+    //     if (MultiTextFieldModel._multiFieldData[i].fieldName!.contains(entry.key)) {
+    //       MultiTextFieldModel._multiFieldData[i].controller.text = entry.value;
+    //       MultiTextFieldModel._multiFieldData[i].isActive = true;
+    //     }
+    //   }
+    // }
+
+    // for (var i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
+    //   if (MultiTextFieldModel._multiFieldData[i].isActive == true) {
+    //     MultiTextFieldModel._multiFieldData[i].requestFocus!();
+    //   }
+    // }
   }
 
   static Future navigateToPage(String route, BuildContext context) async {
@@ -406,20 +358,7 @@ class MultiTextFieldModel {
   VoidCallback? requestFocus;
   bool? isActive;
   TextEditingController controller;
+  FocusNode focusNode;
 
-  MultiTextFieldModel({required this.fieldName, required this.requestFocus, required this.isActive, required this.controller});
-
-  static List<MultiTextFieldModel> _multiFieldData = [
-    MultiTextFieldModel(fieldName: 'e-mail', requestFocus: VoiceLogic.emailFocusNode.requestFocus, isActive: false, controller: VoiceLogic.emailController),
-    MultiTextFieldModel(fieldName: 'name', requestFocus: VoiceLogic.nameFocusNode.requestFocus, isActive: false, controller: VoiceLogic.nameController),
-    MultiTextFieldModel(fieldName: 'summe personen', requestFocus: VoiceLogic.amountPersonsFocusNode.requestFocus, isActive: false, controller: VoiceLogic.amountController),
-    MultiTextFieldModel(fieldName: 'telefon', requestFocus: VoiceLogic.phoneFocusNode.requestFocus, isActive: false, controller: VoiceLogic.phoneController),
-    MultiTextFieldModel(fieldName: 'id', requestFocus: VoiceLogic.idFocusNode.requestFocus, isActive: false, controller: VoiceLogic.idController),
-    MultiTextFieldModel(fieldName: 'geburtstag', requestFocus: VoiceLogic.birthDayFocusNode.requestFocus, isActive: false, controller: VoiceLogic.birthDayController),
-    MultiTextFieldModel(fieldName: 'adresse', requestFocus: VoiceLogic.addressFocusNode.requestFocus, isActive: false, controller: VoiceLogic.addressController),
-  ];
-
-  static List<MultiTextFieldModel> getList() {
-    return _multiFieldData;
-  }
+  MultiTextFieldModel({required this.fieldName, required this.requestFocus, required this.isActive, required this.controller, required this.focusNode});
 }
