@@ -78,7 +78,10 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
                             Navigator.pop(context);
                           },
                           child: const Text('Go home')),
-                    )
+                    ),
+                    const SizedBox(height: 10),
+                    Text('Ansprache Multifeld mit dem Keyword VIELFACH + zB NAME: XXXXX, TELEFON: XXXXX'),
+                    Text('Ansprache Einzelfeld mit dem Keyword WÄHLE + zB NAME. Nachdem ein Textfeld aktiviert wurde, zweites Command auslösen mit dem Keyword NOTIERE: XXXXX')
                   ],
                 )),
           ),

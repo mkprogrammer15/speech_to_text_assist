@@ -71,7 +71,7 @@ mixin Utils {
 
     if (text.contains(Command.filterDE)) {
       final letter = _getTextAfterCommand(text: text, command: Command.filterDE);
-      filterSomething(letter);
+      filterSomething(letter.characters.first);
     }
 
     if (text.contains(Command.filterEN)) {
@@ -97,70 +97,59 @@ mixin Utils {
     }
 
     if (text.contains(Command.chooseDE)) {
-      _getTextAfterCommand(text: text, command: Command.chooseDE);
+      _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseDE);
       checkTextFieldSlot();
     }
 
     if (text.contains(Command.chooseEN)) {
-      _getTextAfterCommand(text: text, command: Command.chooseEN);
+      _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseEN);
       checkTextFieldSlot();
     }
 
-    if (text.contains('multi')) {
-      final bodyText = _getTextAfterCommand(text: text, command: 'multi');
+    if (text.contains('vielfach')) {
+      final bodyText = _getTextAfterCommand(text: text, command: 'vielfach');
       checkMultiTextFieldSlot(bodyText);
     }
 
     if (text.contains(Command.tipDE)) {
-      VoiceLogic.textFieldInput = '';
-      String body = _getTextAfterCommand(text: text, command: Command.tipDE);
+      singleTextInput(text: text, amountPersons: 'summepersonen', birthday: 'geburtstag', command: Command.tipDE);
+    }
 
-      for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
-        if (VoiceLogic.multiTextFieldModelList[i].focusNode.hasFocus) {
-          VoiceLogic.multiTextFieldModelList[i].controller.text = body;
-          if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('e-mail')) {
-            String newBody = body.replaceAll(' ', '');
-            String lastChange = newBody.replaceAll('..', '@');
-            VoiceLogic.multiTextFieldModelList[i].controller.text = lastChange;
-          }
-          if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('geburtstag')) {
-            String someNewBody = body.replaceAll(' ', '');
-            VoiceLogic.multiTextFieldModelList[i].controller.text = someNewBody;
+    if (text.contains(Command.tipEN)) {
+      singleTextInput(birthday: 'birthday', amountPersons: 'amountpersons', text: text, command: Command.tipEN);
+    }
+  }
+
+  static void singleTextInput({required String birthday, required String amountPersons, required String text, required String command}) {
+    VoiceLogic.textFieldInput = '';
+    String body = _getTextAfterCommand(text: text, command: command);
+
+    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+      if (VoiceLogic.multiTextFieldModelList[i].focusNode.hasFocus) {
+        VoiceLogic.multiTextFieldModelList[i].controller.text = body;
+        if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('email')) {
+          String newBody = body.replaceAll(' ', '');
+          String lastChange = newBody.replaceAll('..', '@');
+          VoiceLogic.multiTextFieldModelList[i].controller.text = lastChange;
+        }
+        if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains(birthday)) {
+          String someNewBody = body.replaceAll(' ', '');
+          VoiceLogic.multiTextFieldModelList[i].controller.text = someNewBody;
+        }
+        if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('id') || VoiceLogic.multiTextFieldModelList[i].fieldName!.contains(amountPersons)) {
+          //
+          var number = <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10};
+          var numberEN = <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10};
+          String noSpace = body.replaceAll(' ', '');
+          for (final item in number.entries) {
+            if (noSpace.contains(item.key)) {
+              final noWords = noSpace.replaceAll(item.key, item.value.toString());
+              VoiceLogic.multiTextFieldModelList[i].controller.text = noWords;
+            }
           }
         }
       }
     }
-
-    // if (text.contains(Command.tipEN)) {
-    //   VoiceLogic.textFieldInput = '';
-    //   String body = _getTextAfterCommand(text: text, command: Command.tipEN);
-
-    //   if (VoiceLogic.nameFocusNode.hasFocus) {
-    //     VoiceLogic.nameController.text = body;
-    //   }
-    //   if (VoiceLogic.emailFocusNode.hasFocus) {
-    //     String newBody = body.replaceAll(' ', '');
-    //     String lastChange = newBody.replaceAll('..', '@');
-    //     VoiceLogic.emailController.text = lastChange;
-    //   }
-    //   if (VoiceLogic.phoneFocusNode.hasFocus) {
-    //     VoiceLogic.phoneController.text = body;
-    //   }
-    //   if (VoiceLogic.addressFocusNode.hasFocus) {
-    //     VoiceLogic.addressController.text = body;
-    //   }
-    //   if (VoiceLogic.amountPersonsFocusNode.hasFocus) {
-    //     VoiceLogic.amountController.text = body;
-    //   }
-    //   if (VoiceLogic.idFocusNode.hasFocus) {
-    //     VoiceLogic.idController.text = body;
-    //   }
-    //   if (VoiceLogic.birthDayFocusNode.hasFocus) {
-    //     String someNewBody = body.replaceAll(' ', '');
-    //     final lastChange = someNewBody.replaceAll('point', '.');
-    //     VoiceLogic.birthDayController.text = lastChange;
-    //   }
-    //}
   }
 
   static sortLocations() {
@@ -214,7 +203,6 @@ mixin Utils {
         Navigator.pushNamed(context, 'projekt1');
         break;
       case emails:
-        print('Öffne emails');
         Navigator.pushNamed(context, 'emails');
         break;
       case goBack:
@@ -248,19 +236,43 @@ mixin Utils {
     String speech = c.replaceAll(' ', '');
 
     List spokenList = <String>[];
-    final matchIntentsList = <String>[];
+    List matchIntentsList = <String>[];
     String speechNoCommands = speech;
+    List matchIntentsListNoSpaces = <String>[];
 
-    for (final item in VoiceLogic.textFieldList) {
+    for (int i = 0; i < VoiceLogic.textFieldList.length; i++) {
+      final String item = VoiceLogic.textFieldList[i].replaceAll(' ', '');
+      matchIntentsListNoSpaces.add(item);
+    }
+
+    for (final item in matchIntentsListNoSpaces) {
       if (speechNoCommands.contains(item)) {
         matchIntentsList.add(item);
         speechNoCommands = speechNoCommands.replaceAll(item, '!');
       }
     }
+    print(matchIntentsList);
     speechNoCommands = speechNoCommands.replaceFirst('!', '').replaceAll(',', ' ');
     spokenList = speechNoCommands.split('!');
 
-    var maap = Map<String, String>.fromIterables(matchIntentsList, spokenList as List<String>);
+    if (matchIntentsList.isEmpty) {
+      return;
+    }
+
+    if (spokenList.isEmpty) {
+      return;
+    }
+
+    var number = <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10};
+    for (int i = 0; i < spokenList.length; i++) {
+      for (final entry in number.entries) {
+        if (spokenList[i].toString().contains(entry.key)) {
+          spokenList[i].toString().replaceAll(entry.key, entry.value.toString());
+        }
+      }
+    }
+
+    var maap = Map<String, String>.fromIterables(matchIntentsList as List<String>, spokenList as List<String>);
 
     for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       VoiceLogic.multiTextFieldModelList[i].isActive = false;
@@ -277,7 +289,7 @@ mixin Utils {
 
     for (var i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       if (VoiceLogic.multiTextFieldModelList[i].isActive == true) {
-        VoiceLogic.multiTextFieldModelList[i].requestFocus!;
+        VoiceLogic.multiTextFieldModelList[i].requestFocus;
       }
     }
 

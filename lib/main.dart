@@ -77,9 +77,6 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
 
   @override
   Widget build(BuildContext context) {
-    print(defaultLocale);
-    Locale appLocale = Localizations.localeOf(context);
-    print('appLocale = $appLocale');
     return Scaffold(
         appBar: AppBar(
           title: const Text('Speech to text'),
