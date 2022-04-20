@@ -3,12 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shake/shake.dart';
-import 'package:speech_to_text_my_app/bloc/textfield_bloc.dart';
-import 'package:speech_to_text_my_app/calculator_screen.dart';
-import 'package:speech_to_text_my_app/projekt1_screen.dart';
-import 'package:speech_to_text_my_app/emails_screen.dart';
-import 'package:speech_to_text_my_app/locations_screen.dart';
+import 'package:speech_to_text_my_app/screens/calculator_screen.dart';
+import 'package:speech_to_text_my_app/screens/mask_screen.dart';
+import 'package:speech_to_text_my_app/screens/projekt1_screen.dart';
+import 'package:speech_to_text_my_app/screens/emails_screen.dart';
+import 'package:speech_to_text_my_app/screens/locations_screen.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
+import 'package:speech_to_text_my_app/text_field_bloc/textfield_bloc.dart';
 import 'package:speech_to_text_my_app/text_field_data_remote/text_field_data_source.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 import 'package:speech_to_text_my_app/widgets/menu_button.dart';
@@ -42,7 +43,8 @@ class _MyAppState extends State<MyApp> {
           LocationsScreen.routeName: (context) => const LocationsScreen(),
           Projekt1Screen.routeName: (context) => const Projekt1Screen(),
           EmailsScreen.routeName: (context) => const EmailsScreen(),
-          Calculator.routeName: (context) => const Calculator()
+          Calculator.routeName: (context) => const Calculator(),
+          MaskScreen.routeName: (context) => const MaskScreen(),
         },
       ),
     );
@@ -61,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
   final String itemName2 = 'Projekt1';
   final String itemName3 = 'MK Locations';
   final String itemName4 = 'Rechner';
+  final String itemName5 = 'Maske';
   bool isChosenDE = true;
   bool isChosenEN = false;
 
@@ -125,7 +128,8 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
               MenuButton(itemName: itemName1, routeName: 'emails', engName: 'Emails', language: 'en_EN'),
               MenuButton(itemName: itemName2, routeName: 'projekt1', engName: 'Project1', language: 'en_EN'),
               MenuButton(itemName: itemName3, routeName: 'locations', engName: 'mk locations', language: 'en_EN'),
-              MenuButton(itemName: itemName4, routeName: 'calculator', engName: 'Calculator', language: 'en_EN')
+              MenuButton(itemName: itemName4, routeName: 'calculator', engName: 'Calculator', language: 'en_EN'),
+              MenuButton(itemName: itemName5, routeName: 'mask', engName: 'mask', language: 'en_EN')
             ],
           ),
         ),

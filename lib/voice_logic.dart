@@ -12,6 +12,8 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   static double offset = 0;
   static List<String> textFieldList = [];
   static List<MultiTextFieldModel> multiTextFieldModelList = [];
+  static TextEditingController nameController = TextEditingController();
+  static TextEditingController phoneController = TextEditingController();
 
   static void getAllTextFields(List<String> someApiList) {
     for (int i = 0; i < someApiList.length; i++) {

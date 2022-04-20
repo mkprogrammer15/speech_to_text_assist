@@ -1,7 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:speech_to_text_my_app/bloc/textfield_bloc.dart';
+import 'package:speech_to_text_my_app/text_field_bloc/textfield_bloc.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 
 class Calculator extends StatefulWidget {
@@ -80,8 +80,8 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
                           child: const Text('Go home')),
                     ),
                     const SizedBox(height: 10),
-                    Text('Ansprache Multifeld mit dem Keyword VIELFACH + zB NAME: XXXXX, TELEFON: XXXXX'),
-                    Text('Ansprache Einzelfeld mit dem Keyword WÄHLE + zB NAME. Nachdem ein Textfeld aktiviert wurde, zweites Command auslösen mit dem Keyword NOTIERE: XXXXX')
+                    const Text('Ansprache Multifeld mit dem Keyword MULTI + zB NAME: XXXXX, TELEFON: XXXXX'),
+                    const Text('Ansprache Einzelfeld mit dem Keyword WÄHLE + zB NAME. Nachdem ein Textfeld aktiviert wurde, zweites Command auslösen mit dem Keyword NOTIERE: XXXXX')
                   ],
                 )),
           ),
@@ -100,89 +100,3 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
         ));
   }
 }
-
-// SizedBox(
-//   width: 300,
-//   child: TextFormField(
-//     focusNode: VoiceLogic.emailFocusNode,
-//     controller: VoiceLogic.emailController,
-//     decoration: InputDecoration(
-//       hintText: 'email@example.com',
-//       labelText: 'your email',
-//
-//     keyboardType: TextInputType.emailAddress,
-//     validator: (value) => !EmailValidator.validate(VoiceLogic.emailController.text) ? 'Invalid Email' : null,
-//   ),
-// ),
-// SizedBox(
-//   width: 300,
-//   child: TextFormField(
-//     focusNode: VoiceLogic.nameFocusNode,
-//     controller: VoiceLogic.nameController,
-//     decoration: InputDecoration(
-//       hintText: 'name',
-//       labelText: 'name',
-//     ),
-//     keyboardType: TextInputType.name,
-//   ),
-// ),
-// SizedBox(
-//   width: 300,
-//   child: TextFormField(
-//     focusNode: VoiceLogic.amountPersonsFocusNode,
-//     controller: VoiceLogic.amountController,
-//     decoration: InputDecoration(
-//       hintText: 'How many persons?',
-//       labelText: 'Amount of persons',
-//     ),
-//     keyboardType: TextInputType.number,
-//   ),
-// ),
-// SizedBox(
-//   width: 300,
-//   child: TextFormField(
-//     focusNode: VoiceLogic.phoneFocusNode,
-//     controller: VoiceLogic.phoneController,
-//     decoration: InputDecoration(
-//       hintText: 'your phone number',
-//       labelText: 'phone number',
-//     ),
-//     keyboardType: TextInputType.phone,
-//   ),
-// ),
-// SizedBox(
-//   width: 300,
-//   child: TextFormField(
-//     focusNode: VoiceLogic.idFocusNode,
-//     controller: VoiceLogic.idController,
-//     decoration: InputDecoration(
-//       hintText: 'Your ID',
-//       labelText: 'ID',
-//     ),
-//     keyboardType: TextInputType.text,
-//   ),
-// ),
-// SizedBox(
-//   width: 300,
-//   child: TextFormField(
-//     focusNode: VoiceLogic.birthDayFocusNode,
-//     controller: VoiceLogic.birthDayController,
-//     decoration: InputDecoration(
-//       hintText: 'Choose your birthday',
-//       labelText: 'Date of Birth',
-//     ),
-//     keyboardType: TextInputType.datetime,
-//   ),
-// ),
-// SizedBox(
-//   width: 300,
-//   child: TextFormField(
-//     focusNode: VoiceLogic.addressFocusNode,
-//     controller: VoiceLogic.addressController,
-//     decoration: InputDecoration(
-//       hintText: 'Your address',
-//       labelText: 'address',
-//     ),
-//     keyboardType: TextInputType.emailAddress,
-//   ),
-// ),

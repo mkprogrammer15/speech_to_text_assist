@@ -14,6 +14,8 @@ class Command {
   static const tipDE = 'notiere';
   static const scrollDownDE = 'runter';
   static const scrollUpDE = 'hoch';
+  static const kombiIntentDE = 'kombi';
+  static const goToDe = 'gehe zu';
 
   static const openEN = 'open';
   static const goBackEN = 'go back';
@@ -22,6 +24,10 @@ class Command {
   static const writeEN = 'note';
   static const chooseEN = 'choose';
   static const tipEN = 'tip';
+  static const scrollDownEN = 'scroll down';
+  static const scrollUpEN = 'scroll up';
+  static const combyIntentEN = 'comby';
+  static const goToEN = 'go to';
 }
 
 mixin Utils {
@@ -30,12 +36,33 @@ mixin Utils {
   static void scanText(String rawText, BuildContext context) {
     String text = rawText.toLowerCase();
 
-    if (text.contains(Command.scrollDownDE)) {
+    if (text.contains(Command.goToDe)) {
+      _getTextAfterCommand(text: text, command: Command.goToDe);
+      checkRouteSlot(context);
+    }
+
+    if (text.contains(Command.goToEN)) {
+      _getTextAfterCommand(text: text, command: Command.goToEN);
+      checkRouteSlot(context);
+    }
+
+    if (text.contains(Command.kombiIntentDE)) {
+      _getTextAfterCommand(text: text, command: Command.openDE);
+      final newList = newText.split(' ').toList();
+      for (final item in newList) {
+        if (item.contains(Command.chooseDE)) {
+          _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseDE);
+          checkTextFieldSlot();
+        }
+      }
+    }
+
+    if (text.contains(Command.scrollDownDE) || text.contains(Command.scrollDownEN)) {
       VoiceLogic.offset += 300;
       scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
     }
 
-    if (text.contains(Command.scrollUpDE)) {
+    if (text.contains(Command.scrollUpDE) || text.contains(Command.scrollUpEN)) {
       if (VoiceLogic.offset <= 0) {
         return;
       }
@@ -45,20 +72,24 @@ mixin Utils {
 
     if (text.contains(Command.openDE)) {
       _getTextAfterCommand(text: text, command: Command.openDE);
-      checkSlot(context);
+      checkRouteSlot(context);
     }
 
     if (text.contains(Command.openEN)) {
       _getTextAfterCommand(text: text, command: Command.openEN);
-      checkSlot(context);
+      checkRouteSlot(context);
     }
 
     if (text.contains(Command.goBackDE)) {
-      checkSlot(context);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
     }
 
     if (text.contains(Command.goBackEN)) {
-      checkSlot(context);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
     }
 
     if (text.contains(Command.sortDE)) {
@@ -106,21 +137,31 @@ mixin Utils {
       checkTextFieldSlot();
     }
 
-    if (text.contains('vielfach')) {
-      final bodyText = _getTextAfterCommand(text: text, command: 'vielfach');
+    if (text.contains('multi')) {
+      final bodyText = _getTextAfterCommand(text: text, command: 'multi');
       checkMultiTextFieldSlot(bodyText);
     }
 
     if (text.contains(Command.tipDE)) {
-      singleTextInput(text: text, amountPersons: 'summepersonen', birthday: 'geburtstag', command: Command.tipDE);
+      singleTextInput(
+          text: text,
+          amountPersons: 'summepersonen',
+          birthday: 'geburtstag',
+          command: Command.tipDE,
+          number: <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10});
     }
 
     if (text.contains(Command.tipEN)) {
-      singleTextInput(birthday: 'birthday', amountPersons: 'amountpersons', text: text, command: Command.tipEN);
+      singleTextInput(
+          birthday: 'birthday',
+          amountPersons: 'amountpersons',
+          text: text,
+          command: Command.tipEN,
+          number: <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10});
     }
   }
 
-  static void singleTextInput({required String birthday, required String amountPersons, required String text, required String command}) {
+  static void singleTextInput({required String birthday, required String amountPersons, required String text, required String command, required Map<String, num> number}) {
     VoiceLogic.textFieldInput = '';
     String body = _getTextAfterCommand(text: text, command: command);
 
@@ -137,9 +178,6 @@ mixin Utils {
           VoiceLogic.multiTextFieldModelList[i].controller.text = someNewBody;
         }
         if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('id') || VoiceLogic.multiTextFieldModelList[i].fieldName!.contains(amountPersons)) {
-          //
-          var number = <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10};
-          var numberEN = <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10};
           String noSpace = body.replaceAll(' ', '');
           for (final item in number.entries) {
             if (noSpace.contains(item.key)) {
@@ -177,14 +215,15 @@ mixin Utils {
     await scrollController.animateTo(offset, duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
   }
 
-  static void checkSlot(BuildContext context) {
+  static void checkRouteSlot(BuildContext context) {
     const String locationsScreen = 'mk locations';
     const String calculatorDE = 'rechner';
     const String calculatorEN = 'calculator';
     const String projekt1 = 'projekt1';
     const String emails = 'emails';
-    const String goBack = 'zurück';
-    const String goBackEN = 'go back';
+    const String dashBoard = 'dashboard';
+    const String maskScreenDE = 'maske';
+    const String maskScreenEN = 'mask';
 
     if (newText == 'e-mails') {
       newText = 'emails';
@@ -205,15 +244,15 @@ mixin Utils {
       case emails:
         Navigator.pushNamed(context, 'emails');
         break;
-      case goBack:
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        }
+      case dashBoard:
+        Navigator.pushNamed(context, '/');
         break;
-      case goBackEN:
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        }
+      case maskScreenDE:
+        Navigator.pushNamed(context, 'mask');
+        break;
+
+      case maskScreenEN:
+        Navigator.pushNamed(context, 'mask');
         break;
 
       default:
@@ -292,25 +331,6 @@ mixin Utils {
         VoiceLogic.multiTextFieldModelList[i].requestFocus;
       }
     }
-
-    // for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
-    //   MultiTextFieldModel._multiFieldData[i].isActive = false;
-    // }
-
-    // for (int i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
-    //   for (final entry in maap.entries) {
-    //     if (MultiTextFieldModel._multiFieldData[i].fieldName!.contains(entry.key)) {
-    //       MultiTextFieldModel._multiFieldData[i].controller.text = entry.value;
-    //       MultiTextFieldModel._multiFieldData[i].isActive = true;
-    //     }
-    //   }
-    // }
-
-    // for (var i = 0; i < MultiTextFieldModel._multiFieldData.length; i++) {
-    //   if (MultiTextFieldModel._multiFieldData[i].isActive == true) {
-    //     MultiTextFieldModel._multiFieldData[i].requestFocus!();
-    //   }
-    // }
   }
 
   static Future navigateToPage(String route, BuildContext context) async {
