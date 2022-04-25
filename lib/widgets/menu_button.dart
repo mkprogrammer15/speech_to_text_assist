@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 
 class MenuButton extends StatelessWidget {
-  const MenuButton({Key? key, required this.itemName, required this.routeName, required this.engName, required this.language}) : super(key: key);
+  const MenuButton({Key? key, required this.itemName, required this.engName, required this.language, required this.onTap}) : super(key: key);
 
   final String itemName;
-  final String routeName;
+
   final String language;
   final String engName;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, routeName);
-        print('$itemName pushed!!!');
-      },
+      onTap: onTap,
       child: Container(
         height: 110,
         width: 110,

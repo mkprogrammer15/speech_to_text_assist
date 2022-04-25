@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,15 +47,12 @@ mixin Utils {
       checkRouteSlot(context);
     }
 
-    if (text.contains(Command.kombiIntentDE)) {
-      _getTextAfterCommand(text: text, command: Command.openDE);
-      final newList = newText.split(' ').toList();
-      for (final item in newList) {
-        if (item.contains(Command.chooseDE)) {
-          _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseDE);
-          checkTextFieldSlot();
-        }
-      }
+    if (text.contains(Command.kombiIntentDE) || text.contains(Command.combyIntentEN)) {
+      final body = _getTextAfterCommand(text: text, command: Command.openDE);
+      final secondBody = _getTextAfterCommand(text: body, command: 'maske multi');
+      print(secondBody);
+      checkSpecialSlot(context, body);
+      checkMultiTextFieldSlot(secondBody);
     }
 
     if (text.contains(Command.scrollDownDE) || text.contains(Command.scrollDownEN)) {
@@ -215,6 +213,22 @@ mixin Utils {
     await scrollController.animateTo(offset, duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
   }
 
+  static void checkSpecialSlot(BuildContext context, String someText) {
+    const String maskScreenDE = 'maske';
+    const String maskScreenEN = 'mask';
+    if (someText.contains(maskScreenDE) || someText.contains(maskScreenEN)) {
+      VoiceLogic.multiTextFieldModelList.clear();
+      if (SpeechApi.currentLocaleId == 'de_DE') {
+        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
+        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+      } else {
+        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameEN as List<String>);
+        VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
+      }
+      Navigator.pushNamed(context, 'mask');
+    }
+  }
+
   static void checkRouteSlot(BuildContext context) {
     const String locationsScreen = 'mk locations';
     const String calculatorDE = 'rechner';
@@ -248,10 +262,14 @@ mixin Utils {
         Navigator.pushNamed(context, '/');
         break;
       case maskScreenDE:
+        VoiceLogic.multiTextFieldModelList.clear();
+        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
         Navigator.pushNamed(context, 'mask');
         break;
 
       case maskScreenEN:
+        VoiceLogic.multiTextFieldModelList.clear();
+        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameEN as List<String>);
         Navigator.pushNamed(context, 'mask');
         break;
 

@@ -120,17 +120,38 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
             )
           ],
         ),
-        body: Align(
-          alignment: Alignment.bottomCenter,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              MenuButton(itemName: itemName1, routeName: 'emails', engName: 'Emails', language: 'en_EN'),
-              MenuButton(itemName: itemName2, routeName: 'projekt1', engName: 'Project1', language: 'en_EN'),
-              MenuButton(itemName: itemName3, routeName: 'locations', engName: 'mk locations', language: 'en_EN'),
-              MenuButton(itemName: itemName4, routeName: 'calculator', engName: 'Calculator', language: 'en_EN'),
-              MenuButton(itemName: itemName5, routeName: 'mask', engName: 'mask', language: 'en_EN')
-            ],
+        body: SingleChildScrollView(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                MenuButton(
+                  itemName: itemName1,
+                  engName: 'Emails',
+                  language: 'en_EN',
+                  onTap: () => Navigator.pushNamed(context, 'emails'),
+                ),
+                MenuButton(itemName: itemName2, engName: 'Project1', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'projekt1')),
+                MenuButton(itemName: itemName3, engName: 'mk locations', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'locations')),
+                MenuButton(itemName: itemName4, engName: 'Calculator', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'calculator')),
+                MenuButton(
+                  itemName: itemName5,
+                  engName: 'mask',
+                  language: 'en_EN',
+                  onTap: () {
+                    VoiceLogic.multiTextFieldModelList.clear();
+                    if (SpeechApi.currentLocaleId == 'de_DE') {
+                      VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
+                    } else {
+                      VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameEN as List<String>);
+                    }
+
+                    Navigator.pushNamed(context, 'mask');
+                  },
+                )
+              ],
+            ),
           ),
         ),
         floatingActionButton: micButton(context, toggleRecording, isListening));
