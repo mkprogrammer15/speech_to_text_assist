@@ -23,13 +23,13 @@ class TextfieldBloc extends Bloc<TextfieldEvent, TextfieldState> {
     if (event is GetTextFieldDataEvent) {
       final textFieldList = await textFieldDataSource.getPost(SpeechApi.currentLocaleId == 'de_DE' ? 'SFL4TSIiarAfmCop6jlI' : 'EPqrXKwUmcdKJBguHEP0');
       VoiceLogic.textFieldList = textFieldList;
-      VoiceLogic.getAllTextFields(textFieldList);
+      VoiceLogic.getAllTextFields();
       yield GetTextFieldsState(textFieldList);
     }
     if (event is GetTextFieldDataEvent2) {
       final textFieldList = await textFieldDataSource.getPost(SpeechApi.currentLocaleId == 'de_DE' ? 'H6aJUfNlgIsmU4IHQIZm' : 'BsrW9b1oFeOqmeBUo28g');
       VoiceLogic.textFieldList = textFieldList;
-      VoiceLogic.getAllTextFields(textFieldList);
+      VoiceLogic.getAllTextFields();
       yield GetTextFieldsState(textFieldList);
     }
   }

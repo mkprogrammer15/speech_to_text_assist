@@ -79,6 +79,12 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    SpeechApi.speech.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -142,9 +148,13 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
                   onTap: () {
                     VoiceLogic.multiTextFieldModelList.clear();
                     if (SpeechApi.currentLocaleId == 'de_DE') {
-                      VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
+                      //  VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
+                      VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+                      VoiceLogic.getAllTextFields();
+                      print(VoiceLogic.textFieldList);
                     } else {
-                      VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameEN as List<String>);
+                      VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
+                      VoiceLogic.getAllTextFields();
                     }
 
                     Navigator.pushNamed(context, 'mask');
@@ -154,6 +164,8 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
             ),
           ),
         ),
-        floatingActionButton: micButton(context, toggleRecording, isListening));
+        floatingActionButton:
+            //MicroButton(isListening: isListening, toggleRecording: toggleRecording)
+            micButton(context, toggleRecording, isListening));
   }
 }

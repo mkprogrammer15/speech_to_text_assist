@@ -16,10 +16,10 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   static List textFieldNameDE = <String>['name', 'telefon'];
   static List textFieldNameEN = <String>['name', 'phone'];
 
-  static void getAllTextFields(List<String> someApiList) {
-    for (int i = 0; i < someApiList.length; i++) {
-      MultiTextFieldModel textFieldModel =
-          MultiTextFieldModel(fieldName: someApiList[i].replaceAll(' ', ''), requestFocus: FocusNode().requestFocus, isActive: false, controller: TextEditingController(), focusNode: FocusNode());
+  static void getAllTextFields() {
+    for (int i = 0; i < VoiceLogic.textFieldList.length; i++) {
+      MultiTextFieldModel textFieldModel = MultiTextFieldModel(
+          fieldName: VoiceLogic.textFieldList[i].replaceAll(' ', ''), requestFocus: FocusNode().requestFocus, isActive: false, controller: TextEditingController(), focusNode: FocusNode());
       multiTextFieldModelList.add(textFieldModel);
     }
   }
@@ -29,11 +29,12 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   }
 
   Future toggleRecording(BuildContext context) {
-    return SpeechApi.toggleRecording(
+    return SpeechApi.record(
       onResult: (text) => setState(() => VoiceLogic.text = text),
       onListening: (isListening) {
-        //  setState(() => this.isListening = isListening);
+        // setState(() => this.isListening = isListening);
         if (!isListening && this.isListening) {
+          //&& this.isListening
           Future.delayed(const Duration(seconds: 1), () {
             Utils.scanText(text, context);
           });

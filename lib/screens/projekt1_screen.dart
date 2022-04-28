@@ -24,7 +24,11 @@ class Projekt1Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body:
+          // Container(
+          // child: LicensePage(),
+          // )
+          Column(
         verticalDirection: VerticalDirection.down,
         children: [
           Expanded(child: listViewWidget()),

@@ -1,4 +1,3 @@
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/utils.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
@@ -46,7 +45,9 @@ class _EmailsScreenState extends State<EmailsScreen> with VoiceLogic {
           ),
         ),
       ),
-      floatingActionButton: micButton(context, toggleRecording, isListening),
+      floatingActionButton:
+          //MicroButton(toggleRecording: toggleRecording, isListening: isListening)
+          micButton(context, toggleRecording, isListening),
     );
   }
 }

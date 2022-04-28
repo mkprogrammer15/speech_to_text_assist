@@ -43,13 +43,6 @@ class _LocationsScreenState extends State<LocationsScreen> with VoiceLogic {
               const SizedBox(
                 height: 20,
               ),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       setState(() {
-              //         VoiceLogic.cities.value.sort();
-              //       });
-              //     },
-              //     child: const Text('sort')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -58,6 +51,8 @@ class _LocationsScreenState extends State<LocationsScreen> with VoiceLogic {
             ],
           ),
         ),
-        floatingActionButton: micButton(context, toggleRecording, isListening));
+        floatingActionButton:
+            //MicroButton(toggleRecording: toggleRecording, isListening: isListening));
+            micButton(context, toggleRecording, isListening));
   }
 }

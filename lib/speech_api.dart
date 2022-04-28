@@ -9,7 +9,7 @@ class SpeechApi {
 
   static List<LocaleName> localeNames = [];
 
-  static Future<bool> toggleRecording({required Function(String text) onResult, required ValueChanged<bool> onListening}) async {
+  static Future<bool> record({required Function(String text) onResult, required ValueChanged<bool> onListening}) async {
     if (speech.isListening) {
       speech.stop();
       return true;

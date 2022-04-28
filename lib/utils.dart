@@ -219,11 +219,11 @@ mixin Utils {
     if (someText.contains(maskScreenDE) || someText.contains(maskScreenEN)) {
       VoiceLogic.multiTextFieldModelList.clear();
       if (SpeechApi.currentLocaleId == 'de_DE') {
-        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
         VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+        VoiceLogic.getAllTextFields();
       } else {
-        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameEN as List<String>);
         VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
+        VoiceLogic.getAllTextFields();
       }
       Navigator.pushNamed(context, 'mask');
     }
@@ -263,13 +263,18 @@ mixin Utils {
         break;
       case maskScreenDE:
         VoiceLogic.multiTextFieldModelList.clear();
-        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
-        Navigator.pushNamed(context, 'mask');
+        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+        VoiceLogic.getAllTextFields();
+        Navigator.pushNamed(
+          context,
+          'mask',
+        );
         break;
 
       case maskScreenEN:
         VoiceLogic.multiTextFieldModelList.clear();
-        VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameEN as List<String>);
+        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+        VoiceLogic.getAllTextFields();
         Navigator.pushNamed(context, 'mask');
         break;
 
@@ -330,6 +335,7 @@ mixin Utils {
     }
 
     var maap = Map<String, String>.fromIterables(matchIntentsList as List<String>, spokenList as List<String>);
+    print(maap);
 
     for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       VoiceLogic.multiTextFieldModelList[i].isActive = false;
