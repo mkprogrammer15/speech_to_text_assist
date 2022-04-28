@@ -1,10 +1,11 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/utils.dart';
 
 mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   static var cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
-  bool isListening = false;
+  static bool isListening = false;
   static String text = 'Press the button and start speaking';
   static String textFieldInput = '';
 
@@ -33,13 +34,13 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
       onResult: (text) => setState(() => VoiceLogic.text = text),
       onListening: (isListening) {
         // setState(() => this.isListening = isListening);
-        if (!isListening && this.isListening) {
+        if (!isListening && VoiceLogic.isListening) {
           //&& this.isListening
           Future.delayed(const Duration(seconds: 1), () {
             Utils.scanText(text, context);
           });
         }
-        setState(() => this.isListening = isListening);
+        setState(() => VoiceLogic.isListening = isListening);
       },
     );
   }

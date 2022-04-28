@@ -1,8 +1,10 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shake/shake.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/text_field_bloc/textfield_bloc.dart';
+import 'package:speech_to_text_my_app/utils.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 
 class MaskScreen extends StatefulWidget {
@@ -15,6 +17,29 @@ class MaskScreen extends StatefulWidget {
 }
 
 class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
+  ShakeDetector? detector;
+
+  @override
+  void initState() {
+    super.initState();
+    detector = ShakeDetector.autoStart(onPhoneShake: () {
+      toggleRecording(context);
+      setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(Utils.newText),
+          duration: const Duration(seconds: 7),
+        ));
+      });
+    });
+    detector!.onPhoneShake;
+  }
+
+  @override
+  void dispose() {
+    detector!.stopListening();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +76,7 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
           ),
         ),
         floatingActionButton: AvatarGlow(
-          animate: isListening,
+          animate: VoiceLogic.isListening,
           endRadius: 75,
           glowColor: Theme.of(context).primaryColor,
           duration: const Duration(milliseconds: 2000),
@@ -59,7 +84,7 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
           repeat: true,
           child: FloatingActionButton(
             onPressed: () => toggleRecording(context),
-            child: Icon(isListening ? Icons.mic : Icons.mic_none, size: 36),
+            child: Icon(VoiceLogic.isListening ? Icons.mic : Icons.mic_none, size: 36),
           ),
         ));
   }

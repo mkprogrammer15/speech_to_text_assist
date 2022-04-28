@@ -68,20 +68,21 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
   bool isChosenEN = false;
 
   final String defaultLocale = Platform.localeName;
+  ShakeDetector? detector;
 
   @override
   void initState() {
     super.initState();
-    ShakeDetector detector = ShakeDetector.autoStart(onPhoneShake: () {
+    detector = ShakeDetector.autoStart(onPhoneShake: () {
       toggleRecording(context);
     });
-    detector.onPhoneShake;
+    detector!.onPhoneShake;
   }
 
   @override
   void dispose() {
+    detector!.stopListening();
     super.dispose();
-    SpeechApi.speech.cancel();
   }
 
   @override
@@ -148,10 +149,8 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
                   onTap: () {
                     VoiceLogic.multiTextFieldModelList.clear();
                     if (SpeechApi.currentLocaleId == 'de_DE') {
-                      //  VoiceLogic.getAllTextFields(VoiceLogic.textFieldNameDE as List<String>);
                       VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
                       VoiceLogic.getAllTextFields();
-                      print(VoiceLogic.textFieldList);
                     } else {
                       VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
                       VoiceLogic.getAllTextFields();
@@ -166,6 +165,6 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
         ),
         floatingActionButton:
             //MicroButton(isListening: isListening, toggleRecording: toggleRecording)
-            micButton(context, toggleRecording, isListening));
+            micButton(context, toggleRecording));
   }
 }

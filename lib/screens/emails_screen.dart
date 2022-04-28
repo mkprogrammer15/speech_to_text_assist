@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shake/shake.dart';
 import 'package:speech_to_text_my_app/utils.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 import 'package:speech_to_text_my_app/widgets/mic_button.dart';
@@ -14,6 +15,22 @@ class EmailsScreen extends StatefulWidget {
 }
 
 class _EmailsScreenState extends State<EmailsScreen> with VoiceLogic {
+  ShakeDetector? detector;
+  @override
+  void initState() {
+    detector = ShakeDetector.autoStart(onPhoneShake: () {
+      toggleRecording(context);
+    });
+    detector!.onPhoneShake;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    detector!.stopListening();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +64,7 @@ class _EmailsScreenState extends State<EmailsScreen> with VoiceLogic {
       ),
       floatingActionButton:
           //MicroButton(toggleRecording: toggleRecording, isListening: isListening)
-          micButton(context, toggleRecording, isListening),
+          micButton(context, toggleRecording),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shake/shake.dart';
 import 'package:speech_to_text_my_app/text_field_bloc/textfield_bloc.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 
@@ -14,6 +15,23 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> with VoiceLogic {
+  ShakeDetector? detector;
+
+  @override
+  void initState() {
+    super.initState();
+    detector = ShakeDetector.autoStart(onPhoneShake: () {
+      toggleRecording(context);
+    });
+    detector!.onPhoneShake;
+  }
+
+  @override
+  void dispose() {
+    detector!.stopListening();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,15 +97,12 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
                           },
                           child: const Text('Go home')),
                     ),
-                    const SizedBox(height: 10),
-                    const Text('Ansprache Multifeld mit dem Keyword MULTI + zB NAME: XXXXX, TELEFON: XXXXX'),
-                    const Text('Ansprache Einzelfeld mit dem Keyword WÄHLE + zB NAME. Nachdem ein Textfeld aktiviert wurde, zweites Command auslösen mit dem Keyword NOTIERE: XXXXX')
                   ],
                 )),
           ),
         ),
         floatingActionButton: AvatarGlow(
-          animate: isListening,
+          animate: VoiceLogic.isListening,
           endRadius: 75,
           glowColor: Theme.of(context).primaryColor,
           duration: const Duration(milliseconds: 2000),
@@ -95,7 +110,7 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
           repeat: true,
           child: FloatingActionButton(
             onPressed: () => toggleRecording(context),
-            child: Icon(isListening ? Icons.mic : Icons.mic_none, size: 36),
+            child: Icon(VoiceLogic.isListening ? Icons.mic : Icons.mic_none, size: 36),
           ),
         ));
   }

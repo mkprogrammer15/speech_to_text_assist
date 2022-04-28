@@ -1,9 +1,10 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:speech_to_text_my_app/voice_logic.dart';
 
-Widget micButton(BuildContext context, Function toggleRecording, bool isListening) {
+Widget micButton(BuildContext context, Function toggleRecording) {
   return AvatarGlow(
-    animate: isListening,
+    animate: VoiceLogic.isListening,
     endRadius: 75,
     glowColor: Theme.of(context).primaryColor,
     duration: const Duration(milliseconds: 2000),
@@ -11,7 +12,7 @@ Widget micButton(BuildContext context, Function toggleRecording, bool isListenin
     repeat: true,
     child: FloatingActionButton(
       onPressed: () => toggleRecording(context),
-      child: Icon(isListening ? Icons.mic : Icons.mic_none, size: 36),
+      child: Icon(VoiceLogic.isListening ? Icons.mic : Icons.mic_none, size: 36),
     ),
   );
 }

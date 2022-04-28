@@ -37,6 +37,44 @@ mixin Utils {
   static void scanText(String rawText, BuildContext context) {
     String text = rawText.toLowerCase();
 
+    if (text.contains(Command.openDE)) {
+      final firstAction = _getTextAfterCommand(text: text, command: Command.openDE);
+      checkRouteSlot(context);
+      if (text.contains('setze')) {
+        final secondAction = _getTextAfterCommand(text: firstAction, command: 'setze');
+        createTextFields(context, firstAction);
+        checkMultiTextFieldSlot(secondAction);
+      }
+      if (text.contains(Command.filterDE)) {
+        sortLocations();
+        //ToDO: geht nicht
+      }
+    }
+
+    if (text.contains(Command.openEN)) {
+      final firstAction = _getTextAfterCommand(text: text, command: Command.openEN);
+      checkRouteSlot(context);
+      if (text.contains('enter')) {
+        final secondAction = _getTextAfterCommand(text: firstAction, command: 'enter');
+        createTextFields(context, firstAction);
+        checkMultiTextFieldSlot(secondAction);
+      }
+      if (text.contains(Command.filterEN)) {
+        sortLocations();
+        //ToDO: geht nicht
+      }
+    }
+
+    if (text.contains('setze')) {
+      final body = _getTextAfterCommand(text: text, command: 'setze');
+      checkMultiTextFieldSlot(body);
+    }
+
+    if (text.contains('set')) {
+      final body = _getTextAfterCommand(text: text, command: 'set');
+      checkMultiTextFieldSlot(body);
+    }
+
     if (text.contains(Command.goToDe)) {
       _getTextAfterCommand(text: text, command: Command.goToDe);
       checkRouteSlot(context);
@@ -45,14 +83,6 @@ mixin Utils {
     if (text.contains(Command.goToEN)) {
       _getTextAfterCommand(text: text, command: Command.goToEN);
       checkRouteSlot(context);
-    }
-
-    if (text.contains(Command.kombiIntentDE) || text.contains(Command.combyIntentEN)) {
-      final body = _getTextAfterCommand(text: text, command: Command.openDE);
-      final secondBody = _getTextAfterCommand(text: body, command: 'maske multi');
-      print(secondBody);
-      checkSpecialSlot(context, body);
-      checkMultiTextFieldSlot(secondBody);
     }
 
     if (text.contains(Command.scrollDownDE) || text.contains(Command.scrollDownEN)) {
@@ -66,16 +96,6 @@ mixin Utils {
       }
       VoiceLogic.offset -= 300;
       scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
-    }
-
-    if (text.contains(Command.openDE)) {
-      _getTextAfterCommand(text: text, command: Command.openDE);
-      checkRouteSlot(context);
-    }
-
-    if (text.contains(Command.openEN)) {
-      _getTextAfterCommand(text: text, command: Command.openEN);
-      checkRouteSlot(context);
     }
 
     if (text.contains(Command.goBackDE)) {
@@ -135,11 +155,6 @@ mixin Utils {
       checkTextFieldSlot();
     }
 
-    if (text.contains('multi')) {
-      final bodyText = _getTextAfterCommand(text: text, command: 'multi');
-      checkMultiTextFieldSlot(bodyText);
-    }
-
     if (text.contains(Command.tipDE)) {
       singleTextInput(
           text: text,
@@ -158,6 +173,132 @@ mixin Utils {
           number: <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10});
     }
   }
+
+  // static void scanText(String rawText, BuildContext context) {
+  //   String text = rawText.toLowerCase();
+  //   print(text);
+
+  //   if (text.contains(Command.goToDe)) {
+  //     _getTextAfterCommand(text: text, command: Command.goToDe);
+  //     checkRouteSlot(context);
+  //   }
+
+  //   if (text.contains(Command.goToEN)) {
+  //     _getTextAfterCommand(text: text, command: Command.goToEN);
+  //     checkRouteSlot(context);
+  //   }
+
+  //   if (text.contains(Command.kombiIntentDE) || text.contains(Command.combyIntentEN)) {
+  //     final body = _getTextAfterCommand(text: text, command: Command.openDE);
+  //     final secondBody = _getTextAfterCommand(text: body, command: 'maske multi');
+  //     print(secondBody);
+  //     checkSpecialSlot(context, body);
+  //     checkMultiTextFieldSlot(secondBody);
+  //   }
+
+  //   if (text.contains(Command.scrollDownDE) || text.contains(Command.scrollDownEN)) {
+  //     VoiceLogic.offset += 300;
+  //     scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
+  //   }
+
+  //   if (text.contains(Command.scrollUpDE) || text.contains(Command.scrollUpEN)) {
+  //     if (VoiceLogic.offset <= 0) {
+  //       return;
+  //     }
+  //     VoiceLogic.offset -= 300;
+  //     scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
+  //   }
+
+  //   if (text.contains(Command.openDE) || text.contains(Command.openEN)) {
+  //     _getTextAfterCommand(text: text, command: Command.openDE);
+  //     checkRouteSlot(context);
+  //   }
+
+  //   if (text.contains(Command.openEN)) {
+  //     _getTextAfterCommand(text: text, command: Command.openEN);
+  //     checkRouteSlot(context);
+  //   }
+
+  //   if (text.contains(Command.goBackDE)) {
+  //     if (Navigator.canPop(context)) {
+  //       Navigator.pop(context);
+  //     }
+  //   }
+
+  //   if (text.contains(Command.goBackEN)) {
+  //     if (Navigator.canPop(context)) {
+  //       Navigator.pop(context);
+  //     }
+  //   }
+
+  //   if (text.contains(Command.sortDE)) {
+  //     sortLocations();
+  //   }
+
+  //   if (text.contains(Command.sortEN)) {
+  //     sortLocations();
+  //   }
+
+  //   if (text.contains(Command.filterDE)) {
+  //     final letter = _getTextAfterCommand(text: text, command: Command.filterDE);
+  //     filterSomething(letter.characters.first);
+  //   }
+
+  //   if (text.contains(Command.filterEN)) {
+  //     final letter = _getTextAfterCommand(text: text, command: Command.filterEN);
+  //     filterSomething(letter);
+  //   }
+
+  //   if (text.contains('zeige alles')) {
+  //     VoiceLogic.cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
+  //   }
+
+  //   if (text.contains('show all')) {
+  //     VoiceLogic.cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
+  //   }
+  //   if (text.contains(Command.writeDE)) {
+  //     final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeDE);
+  //     openEmail(body: body);
+  //   }
+
+  //   if (text.contains(Command.writeEN)) {
+  //     final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeEN);
+  //     openEmail(body: body);
+  //   }
+
+  //   if (text.contains(Command.chooseDE)) {
+  //     _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseDE);
+  //     checkTextFieldSlot();
+  //   }
+
+  //   if (text.contains(Command.chooseEN)) {
+  //     _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseEN);
+  //     checkTextFieldSlot();
+  //   }
+
+  //   if (text.contains('multi')) {
+  //     final bodyText = _getTextAfterCommand(text: text, command: 'multi');
+  //     checkMultiTextFieldSlot(bodyText);
+  //   }
+
+  //   if (text.contains(Command.tipDE)) {
+  //     singleTextInput(
+  //         text: text,
+  //         amountPersons: 'summepersonen',
+  //         birthday: 'geburtstag',
+  //         command: Command.tipDE,
+  //         number: <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10});
+  //   }
+
+  //   if (text.contains(Command.tipEN)) {
+  //     singleTextInput(
+  //         birthday: 'birthday',
+  //         amountPersons: 'amountpersons',
+  //         text: text,
+  //         command: Command.tipEN,
+  //         number: <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10});
+  //   }
+  // }
 
   static void singleTextInput({required String birthday, required String amountPersons, required String text, required String command, required Map<String, num> number}) {
     VoiceLogic.textFieldInput = '';
@@ -213,19 +354,14 @@ mixin Utils {
     await scrollController.animateTo(offset, duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
   }
 
-  static void checkSpecialSlot(BuildContext context, String someText) {
-    const String maskScreenDE = 'maske';
-    const String maskScreenEN = 'mask';
-    if (someText.contains(maskScreenDE) || someText.contains(maskScreenEN)) {
-      VoiceLogic.multiTextFieldModelList.clear();
-      if (SpeechApi.currentLocaleId == 'de_DE') {
-        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
-        VoiceLogic.getAllTextFields();
-      } else {
-        VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
-        VoiceLogic.getAllTextFields();
-      }
-      Navigator.pushNamed(context, 'mask');
+  static void createTextFields(BuildContext context, String someText) {
+    VoiceLogic.multiTextFieldModelList.clear();
+    if (SpeechApi.currentLocaleId == 'de_DE') {
+      VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+      VoiceLogic.getAllTextFields();
+    } else {
+      VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
+      VoiceLogic.getAllTextFields();
     }
   }
 
@@ -239,10 +375,20 @@ mixin Utils {
     const String maskScreenDE = 'maske';
     const String maskScreenEN = 'mask';
 
+    List intents = [locationsScreen, calculatorDE, calculatorEN, projekt1, emails, dashBoard, maskScreenDE, maskScreenEN];
+    List matcher = [];
+
     if (newText == 'e-mails') {
       newText = 'emails';
     }
-    switch (newText) {
+
+    for (final item in intents) {
+      if (newText.contains(item)) {
+        matcher.add(item);
+      }
+    }
+
+    switch (matcher.first) {
       case locationsScreen:
         Navigator.pushNamed(context, 'locations');
         break;
@@ -279,6 +425,7 @@ mixin Utils {
         break;
 
       default:
+        print('Das habe ich jetzt nicht verstanden');
     }
   }
 
