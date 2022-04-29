@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/utils.dart';
@@ -6,7 +5,9 @@ import 'package:speech_to_text_my_app/utils.dart';
 mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   static var cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
   static bool isListening = false;
-  static String text = 'Press the button and start speaking';
+
+  static var text = ValueNotifier<String>('Press the button and start speaking');
+  //static String text = 'Press the button and start speaking';
   static String textFieldInput = '';
 
   static final scrollController = ScrollController();
@@ -14,8 +15,8 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   static List<String> textFieldList = [];
   static List<MultiTextFieldModel> multiTextFieldModelList = [];
 
-  static List textFieldNameDE = <String>['name', 'telefon'];
-  static List textFieldNameEN = <String>['name', 'phone'];
+  static List textFieldNameDE = <String>['name', 'telefon', 'kommentar'];
+  static List textFieldNameEN = <String>['name', 'phone', 'comment'];
 
   static void getAllTextFields() {
     for (int i = 0; i < VoiceLogic.textFieldList.length; i++) {
@@ -30,23 +31,26 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   }
 
   Future toggleRecording(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text(
-        'Voice assistant is listening',
-        style: TextStyle(color: Colors.black),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: ValueListenableBuilder(
+        valueListenable: VoiceLogic.text,
+        builder: (context, value, child) => Text(
+          VoiceLogic.text.value,
+          style: const TextStyle(color: Colors.black),
+        ),
       ),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 7),
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(),
+      shape: const RoundedRectangleBorder(),
     ));
     return SpeechApi.record(
-      onResult: (text) => setState(() => VoiceLogic.text = text),
+      onResult: (text) => setState(() => VoiceLogic.text.value = text),
       onListening: (isListening) {
         // setState(() => this.isListening = isListening);
         if (!isListening && VoiceLogic.isListening) {
           //&& this.isListening
           Future.delayed(const Duration(seconds: 1), () {
-            Utils.scanText(text, context);
+            Utils.scanText(text.value, context);
           });
         }
         setState(() => VoiceLogic.isListening = isListening);

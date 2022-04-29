@@ -44,7 +44,7 @@ class _EmailsScreenState extends State<EmailsScreen> with VoiceLogic {
               Align(
                 alignment: Alignment.center,
                 child: SubstringHighlight(
-                  text: VoiceLogic.text,
+                  text: VoiceLogic.text.value,
                   terms: Command.all,
                   textStyle: const TextStyle(
                     fontSize: 24,

@@ -57,6 +57,7 @@ class Command {
 
 mixin Utils {
   static String newText = '';
+  static bool isFilled = false;
 
   static void scanText(String rawText, BuildContext context) {
     String text = rawText.toLowerCase();
@@ -92,7 +93,6 @@ mixin Utils {
     }
 
     if (text.contains('setze')) {
-      // avoidFunctionCallByKeyWord();
       final body = _getTextAfterCommand(text: text, command: 'setze');
       checkMultiTextFieldSlot(body);
       return;
@@ -127,15 +127,19 @@ mixin Utils {
       scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
     }
 
-    if (text.contains(Command.goBackDE)) {
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
+    if (text == Command.goBackDE) {
+      if (isFilled == false) {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
       }
     }
 
-    if (text.contains(Command.goBackEN)) {
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
+    if (text == Command.goBackEN) {
+      if (!isFilled) {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
       }
     }
 
@@ -165,13 +169,13 @@ mixin Utils {
       VoiceLogic.cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
     }
     if (text.contains(Command.writeDE)) {
-      final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeDE);
+      final body = _getTextAfterCommand(text: VoiceLogic.text.value, command: Command.writeDE);
       openEmail(body: body);
       return;
     }
 
     if (text.contains(Command.writeEN)) {
-      final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeEN);
+      final body = _getTextAfterCommand(text: VoiceLogic.text.value, command: Command.writeEN);
       openEmail(body: body);
       return;
     }
@@ -187,21 +191,25 @@ mixin Utils {
     }
 
     if (text.contains(Command.tipDE)) {
+      isFilled = false;
       singleTextInput(
           text: text,
           amountPersons: 'summepersonen',
           birthday: 'geburtstag',
           command: Command.tipDE,
           number: <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10});
+      isFilled = true;
     }
 
     if (text.contains(Command.tipEN)) {
+      isFilled = false;
       singleTextInput(
           birthday: 'birthday',
           amountPersons: 'amountpersons',
           text: text,
           command: Command.tipEN,
           number: <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10});
+      isFilled = true;
     }
   }
 
@@ -351,7 +359,8 @@ mixin Utils {
 
     List spokenList = <String>[];
     List matchIntentsList = <String>[];
-    String speechNoCommands = speech;
+    String speechNoCommands = speech.replaceAll('als', '');
+    print(speechNoCommands);
     List matchIntentsListNoSpaces = <String>[];
 
     for (int i = 0; i < VoiceLogic.textFieldList.length; i++) {
