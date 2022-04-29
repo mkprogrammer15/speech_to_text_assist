@@ -30,6 +30,15 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   }
 
   Future toggleRecording(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text(
+        'Voice assistant is listening',
+        style: TextStyle(color: Colors.black),
+      ),
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(),
+    ));
     return SpeechApi.record(
       onResult: (text) => setState(() => VoiceLogic.text = text),
       onListening: (isListening) {

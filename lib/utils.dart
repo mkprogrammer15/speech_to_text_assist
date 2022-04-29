@@ -4,7 +4,33 @@ import 'package:speech_to_text_my_app/voice_logic.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Command {
-  static final all = <String>[openDE, goBackDE, sortDE, filterDE, writeDE];
+  static final all = <String>[
+    openDE,
+    goBackDE,
+    sortDE,
+    filterDE,
+    writeDE,
+    writeDE,
+    chooseDE,
+    tipDE,
+    scrollDownDE,
+    scrollDownEN,
+    goToDe,
+    openEN,
+    goBackEN,
+    sortEN,
+    filterEN,
+    writeEN,
+    chooseEN,
+    tipEN,
+    scrollDownEN,
+    scrollUpEN,
+    goToEN,
+    'setze',
+    'enter',
+    'zeige alles',
+    'show all'
+  ];
 
   static const openDE = 'öffne';
   static const goBackDE = 'zurück';
@@ -15,7 +41,6 @@ class Command {
   static const tipDE = 'notiere';
   static const scrollDownDE = 'runter';
   static const scrollUpDE = 'hoch';
-  static const kombiIntentDE = 'kombi';
   static const goToDe = 'gehe zu';
 
   static const openEN = 'open';
@@ -27,7 +52,6 @@ class Command {
   static const tipEN = 'tip';
   static const scrollDownEN = 'scroll down';
   static const scrollUpEN = 'scroll up';
-  static const combyIntentEN = 'comby';
   static const goToEN = 'go to';
 }
 
@@ -44,6 +68,7 @@ mixin Utils {
         final secondAction = _getTextAfterCommand(text: firstAction, command: 'setze');
         createTextFields(context, firstAction);
         checkMultiTextFieldSlot(secondAction);
+        return;
       }
       if (text.contains(Command.filterDE)) {
         sortLocations();
@@ -58,6 +83,7 @@ mixin Utils {
         final secondAction = _getTextAfterCommand(text: firstAction, command: 'enter');
         createTextFields(context, firstAction);
         checkMultiTextFieldSlot(secondAction);
+        return;
       }
       if (text.contains(Command.filterEN)) {
         sortLocations();
@@ -66,13 +92,16 @@ mixin Utils {
     }
 
     if (text.contains('setze')) {
+      // avoidFunctionCallByKeyWord();
       final body = _getTextAfterCommand(text: text, command: 'setze');
       checkMultiTextFieldSlot(body);
+      return;
     }
 
-    if (text.contains('set')) {
-      final body = _getTextAfterCommand(text: text, command: 'set');
+    if (text.contains('enter')) {
+      final body = _getTextAfterCommand(text: text, command: 'enter');
       checkMultiTextFieldSlot(body);
+      return;
     }
 
     if (text.contains(Command.goToDe)) {
@@ -138,11 +167,13 @@ mixin Utils {
     if (text.contains(Command.writeDE)) {
       final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeDE);
       openEmail(body: body);
+      return;
     }
 
     if (text.contains(Command.writeEN)) {
       final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeEN);
       openEmail(body: body);
+      return;
     }
 
     if (text.contains(Command.chooseDE)) {
@@ -173,132 +204,6 @@ mixin Utils {
           number: <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10});
     }
   }
-
-  // static void scanText(String rawText, BuildContext context) {
-  //   String text = rawText.toLowerCase();
-  //   print(text);
-
-  //   if (text.contains(Command.goToDe)) {
-  //     _getTextAfterCommand(text: text, command: Command.goToDe);
-  //     checkRouteSlot(context);
-  //   }
-
-  //   if (text.contains(Command.goToEN)) {
-  //     _getTextAfterCommand(text: text, command: Command.goToEN);
-  //     checkRouteSlot(context);
-  //   }
-
-  //   if (text.contains(Command.kombiIntentDE) || text.contains(Command.combyIntentEN)) {
-  //     final body = _getTextAfterCommand(text: text, command: Command.openDE);
-  //     final secondBody = _getTextAfterCommand(text: body, command: 'maske multi');
-  //     print(secondBody);
-  //     checkSpecialSlot(context, body);
-  //     checkMultiTextFieldSlot(secondBody);
-  //   }
-
-  //   if (text.contains(Command.scrollDownDE) || text.contains(Command.scrollDownEN)) {
-  //     VoiceLogic.offset += 300;
-  //     scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
-  //   }
-
-  //   if (text.contains(Command.scrollUpDE) || text.contains(Command.scrollUpEN)) {
-  //     if (VoiceLogic.offset <= 0) {
-  //       return;
-  //     }
-  //     VoiceLogic.offset -= 300;
-  //     scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
-  //   }
-
-  //   if (text.contains(Command.openDE) || text.contains(Command.openEN)) {
-  //     _getTextAfterCommand(text: text, command: Command.openDE);
-  //     checkRouteSlot(context);
-  //   }
-
-  //   if (text.contains(Command.openEN)) {
-  //     _getTextAfterCommand(text: text, command: Command.openEN);
-  //     checkRouteSlot(context);
-  //   }
-
-  //   if (text.contains(Command.goBackDE)) {
-  //     if (Navigator.canPop(context)) {
-  //       Navigator.pop(context);
-  //     }
-  //   }
-
-  //   if (text.contains(Command.goBackEN)) {
-  //     if (Navigator.canPop(context)) {
-  //       Navigator.pop(context);
-  //     }
-  //   }
-
-  //   if (text.contains(Command.sortDE)) {
-  //     sortLocations();
-  //   }
-
-  //   if (text.contains(Command.sortEN)) {
-  //     sortLocations();
-  //   }
-
-  //   if (text.contains(Command.filterDE)) {
-  //     final letter = _getTextAfterCommand(text: text, command: Command.filterDE);
-  //     filterSomething(letter.characters.first);
-  //   }
-
-  //   if (text.contains(Command.filterEN)) {
-  //     final letter = _getTextAfterCommand(text: text, command: Command.filterEN);
-  //     filterSomething(letter);
-  //   }
-
-  //   if (text.contains('zeige alles')) {
-  //     VoiceLogic.cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
-  //   }
-
-  //   if (text.contains('show all')) {
-  //     VoiceLogic.cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
-  //   }
-  //   if (text.contains(Command.writeDE)) {
-  //     final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeDE);
-  //     openEmail(body: body);
-  //   }
-
-  //   if (text.contains(Command.writeEN)) {
-  //     final body = _getTextAfterCommand(text: VoiceLogic.text, command: Command.writeEN);
-  //     openEmail(body: body);
-  //   }
-
-  //   if (text.contains(Command.chooseDE)) {
-  //     _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseDE);
-  //     checkTextFieldSlot();
-  //   }
-
-  //   if (text.contains(Command.chooseEN)) {
-  //     _getTextAfterCommand(text: text.replaceAll(' ', ''), command: Command.chooseEN);
-  //     checkTextFieldSlot();
-  //   }
-
-  //   if (text.contains('multi')) {
-  //     final bodyText = _getTextAfterCommand(text: text, command: 'multi');
-  //     checkMultiTextFieldSlot(bodyText);
-  //   }
-
-  //   if (text.contains(Command.tipDE)) {
-  //     singleTextInput(
-  //         text: text,
-  //         amountPersons: 'summepersonen',
-  //         birthday: 'geburtstag',
-  //         command: Command.tipDE,
-  //         number: <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10});
-  //   }
-
-  //   if (text.contains(Command.tipEN)) {
-  //     singleTextInput(
-  //         birthday: 'birthday',
-  //         amountPersons: 'amountpersons',
-  //         text: text,
-  //         command: Command.tipEN,
-  //         number: <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10});
-  //   }
-  // }
 
   static void singleTextInput({required String birthday, required String amountPersons, required String text, required String command, required Map<String, num> number}) {
     VoiceLogic.textFieldInput = '';
@@ -501,23 +406,6 @@ mixin Utils {
       if (VoiceLogic.multiTextFieldModelList[i].isActive == true) {
         VoiceLogic.multiTextFieldModelList[i].requestFocus;
       }
-    }
-  }
-
-  static Future navigateToPage(String route, BuildContext context) async {
-    if (route.trim().isEmpty) {
-      return;
-    } else {
-      print('ROUTEEEEEE: $route');
-      await Navigator.pushNamed(context, route);
-    }
-  }
-
-  static Future goBack(String route, BuildContext context) async {
-    if (route.trim().isEmpty) {
-      return;
-    } else {
-      Navigator.pop(context);
     }
   }
 
