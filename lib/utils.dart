@@ -60,6 +60,7 @@ mixin Utils {
   static bool isFilled = false;
 
   static void scanText(String rawText, BuildContext context) {
+    isFilled = false;
     String text = rawText.toLowerCase();
 
     if (text.contains(Command.openDE)) {
@@ -69,6 +70,7 @@ mixin Utils {
         final secondAction = _getTextAfterCommand(text: firstAction, command: 'setze');
         createTextFields(context, firstAction);
         checkMultiTextFieldSlot(secondAction);
+        isFilled = true;
         return;
       }
       if (text.contains(Command.filterDE)) {
@@ -84,6 +86,7 @@ mixin Utils {
         final secondAction = _getTextAfterCommand(text: firstAction, command: 'enter');
         createTextFields(context, firstAction);
         checkMultiTextFieldSlot(secondAction);
+        isFilled = true;
         return;
       }
       if (text.contains(Command.filterEN)) {
@@ -95,12 +98,14 @@ mixin Utils {
     if (text.contains('setze')) {
       final body = _getTextAfterCommand(text: text, command: 'setze');
       checkMultiTextFieldSlot(body);
+      isFilled = true;
       return;
     }
 
     if (text.contains('enter')) {
       final body = _getTextAfterCommand(text: text, command: 'enter');
       checkMultiTextFieldSlot(body);
+      isFilled = true;
       return;
     }
 
@@ -127,19 +132,15 @@ mixin Utils {
       scrollUpAndDown(VoiceLogic.scrollController, VoiceLogic.offset);
     }
 
-    if (text == Command.goBackDE) {
-      if (isFilled == false) {
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        }
+    if (text.startsWith(Command.goBackDE)) {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
       }
     }
 
-    if (text == Command.goBackEN) {
-      if (!isFilled) {
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        }
+    if (text.startsWith(Command.goBackEN)) {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
       }
     }
 
@@ -371,10 +372,12 @@ mixin Utils {
     for (final item in matchIntentsListNoSpaces) {
       if (speechNoCommands.contains(item)) {
         matchIntentsList.add(item);
-        speechNoCommands = speechNoCommands.replaceAll(item, '!');
+        // speechNoCommands = speechNoCommands.replaceAll(item, '!');
       }
+      speechNoCommands = speechNoCommands.replaceFirst(item, '!');
     }
-    print(matchIntentsList);
+
+    print(matchIntentsList.toSet().toList());
     speechNoCommands = speechNoCommands.replaceFirst('!', '').replaceAll(',', ' ');
     spokenList = speechNoCommands.split('!');
 
@@ -395,7 +398,7 @@ mixin Utils {
       }
     }
 
-    var maap = Map<String, String>.fromIterables(matchIntentsList as List<String>, spokenList as List<String>);
+    var maap = Map<String, String>.fromIterables(matchIntentsList.toSet().toList() as List<String>, spokenList as List<String>);
     print(maap);
 
     for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {

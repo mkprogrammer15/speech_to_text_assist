@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/utils.dart';
+import 'package:text_to_speech/text_to_speech.dart';
 
 mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   static var cities = ValueNotifier<List<String>>(['Berlin', 'Aachen', 'München', 'Leipzig', 'Düsseldorf', 'Bonn']);
@@ -17,6 +18,8 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
 
   static List textFieldNameDE = <String>['name', 'telefon', 'kommentar'];
   static List textFieldNameEN = <String>['name', 'phone', 'comment'];
+  String response = "Sind alle Angaben korrekt ?";
+  static TextToSpeech tts = TextToSpeech();
 
   static void getAllTextFields() {
     for (int i = 0; i < VoiceLogic.textFieldList.length; i++) {
@@ -31,6 +34,7 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   }
 
   Future toggleRecording(BuildContext context) {
+    //For duration overlayentry....
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: ValueListenableBuilder(
         valueListenable: VoiceLogic.text,
@@ -39,18 +43,22 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
           style: const TextStyle(color: Colors.black),
         ),
       ),
-      duration: const Duration(seconds: 7),
+      duration: const Duration(seconds: 15),
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(),
     ));
     return SpeechApi.record(
       onResult: (text) => setState(() => VoiceLogic.text.value = text),
       onListening: (isListening) {
-        // setState(() => this.isListening = isListening);
+        if (isListening == false) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        }
         if (!isListening && VoiceLogic.isListening) {
-          //&& this.isListening
           Future.delayed(const Duration(seconds: 1), () {
             Utils.scanText(text.value, context);
+            if (Utils.isFilled) {
+              tts.speak(response);
+            }
           });
         }
         setState(() => VoiceLogic.isListening = isListening);

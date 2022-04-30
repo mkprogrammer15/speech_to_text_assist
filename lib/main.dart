@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
   @override
   void initState() {
     super.initState();
+    VoiceLogic.tts.speak('Hi! Was kann ich für dich tun?');
     detector = ShakeDetector.autoStart(onPhoneShake: () {
       toggleRecording(context);
     });

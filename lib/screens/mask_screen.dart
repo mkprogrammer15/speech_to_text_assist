@@ -32,6 +32,15 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
       });
     });
     detector!.onPhoneShake;
+    // if (Utils.isFilled) {
+    //   Future.delayed(const Duration(seconds: 3)).then((value) => toggleRecording(context).then((value) {
+    //         Utils.newText.contains('ja')
+    //             ? Utils.isFilled == false
+    //             : setState(
+    //                 () {},
+    //               );
+    //       }));
+    // }
   }
 
   @override

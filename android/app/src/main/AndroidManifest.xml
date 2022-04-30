@@ -35,6 +35,11 @@
     <data android:mimeType="*/*" />
   </intent>
 </queries>
+<queries>  
+  <intent>  
+      <action android:name="android.intent.action.TTS_SERVICE" />  
+  </intent>  
+ </queries>  
 
    <application
         android:label="speech_to_text_my_app"
