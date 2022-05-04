@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,29 +20,16 @@ class MaskScreen extends StatefulWidget {
 
 class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
   ShakeDetector? detector;
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
     detector = ShakeDetector.autoStart(onPhoneShake: () {
       toggleRecording(context);
-      setState(() {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(Utils.newText),
-          duration: const Duration(seconds: 7),
-        ));
-      });
     });
     detector!.onPhoneShake;
-    // if (Utils.isFilled) {
-    //   Future.delayed(const Duration(seconds: 3)).then((value) => toggleRecording(context).then((value) {
-    //         Utils.newText.contains('ja')
-    //             ? Utils.isFilled == false
-    //             : setState(
-    //                 () {},
-    //               );
-    //       }));
-    // }
+    //askIfAllFieldsAreCorrect();
   }
 
   @override
@@ -63,29 +52,36 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
                     const SizedBox(
                       height: 30,
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE.length : VoiceLogic.textFieldNameEN.length,
-                      itemBuilder: (_, index) {
-                        return SizedBox(
-                            width: 300,
-                            child: TextFormField(
-                              focusNode: VoiceLogic.multiTextFieldModelList[index].focusNode,
-                              controller: VoiceLogic.multiTextFieldModelList[index].controller,
-                              decoration: InputDecoration(
-                                hintText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
-                                labelText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
-                              ),
-                            ));
-                      },
-                    ),
+                    ValueListenableBuilder(
+                        valueListenable: Utils.isConfirmed,
+                        builder: (context, value, child) {
+                          if (!Utils.isConfirmed.value) {
+                            askIfAllFieldsAreCorrect();
+                          }
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE.length : VoiceLogic.textFieldNameEN.length,
+                            itemBuilder: (_, index) {
+                              return SizedBox(
+                                  width: 300,
+                                  child: TextFormField(
+                                    focusNode: VoiceLogic.multiTextFieldModelList[index].focusNode,
+                                    controller: VoiceLogic.multiTextFieldModelList[index].controller,
+                                    decoration: InputDecoration(
+                                      hintText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
+                                      labelText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
+                                    ),
+                                  ));
+                            },
+                          );
+                        }),
                   ],
                 )),
           ),
         ),
         floatingActionButton: AvatarGlow(
-          animate: VoiceLogic.isListening,
+          animate: VoiceLogic.isListening.value,
           endRadius: 75,
           glowColor: Theme.of(context).primaryColor,
           duration: const Duration(milliseconds: 2000),
@@ -93,7 +89,7 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
           repeat: true,
           child: FloatingActionButton(
             onPressed: () => toggleRecording(context),
-            child: Icon(VoiceLogic.isListening ? Icons.mic : Icons.mic_none, size: 36),
+            child: Icon(VoiceLogic.isListening.value ? Icons.mic : Icons.mic_none, size: 36),
           ),
         ));
   }

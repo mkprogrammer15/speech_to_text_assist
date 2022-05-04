@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
@@ -58,8 +60,10 @@ class Command {
 mixin Utils {
   static String newText = '';
   static bool isFilled = false;
+  static ValueNotifier isConfirmed = ValueNotifier<bool>(false);
 
   static void scanText(String rawText, BuildContext context) {
+    // newText = '';
     isFilled = false;
     String text = rawText.toLowerCase();
 
@@ -77,6 +81,16 @@ mixin Utils {
         sortLocations();
         //ToDO: geht nicht
       }
+    }
+
+    if (text.contains('ja')) {
+      VoiceLogic.tts.speak('Alles klar');
+      isConfirmed.value = true;
+    }
+
+    if (text.contains('nein')) {
+      VoiceLogic.tts.speak('Was soll korrigiert werden');
+      isConfirmed.value = false;
     }
 
     if (text.contains(Command.openEN)) {
@@ -99,6 +113,7 @@ mixin Utils {
       final body = _getTextAfterCommand(text: text, command: 'setze');
       checkMultiTextFieldSlot(body);
       isFilled = true;
+
       return;
     }
 

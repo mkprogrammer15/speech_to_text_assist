@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -171,3 +170,14 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
             micButton(context, toggleRecording));
   }
 }
+
+// @UIApplicationMain
+// @objc class AppDelegate: FlutterAppDelegate{
+//   override func application(
+//     _ application: UIApplication,
+//     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+//   ) -> Bool {
+//     GeneratedPluginRegistrant.register(with: self)
+//     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+//   }
+// }

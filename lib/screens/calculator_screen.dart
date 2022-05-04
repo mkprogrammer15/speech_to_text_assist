@@ -102,7 +102,7 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
           ),
         ),
         floatingActionButton: AvatarGlow(
-          animate: VoiceLogic.isListening,
+          animate: VoiceLogic.isListening.value,
           endRadius: 75,
           glowColor: Theme.of(context).primaryColor,
           duration: const Duration(milliseconds: 2000),
@@ -110,7 +110,7 @@ class _CalculatorState extends State<Calculator> with VoiceLogic {
           repeat: true,
           child: FloatingActionButton(
             onPressed: () => toggleRecording(context),
-            child: Icon(VoiceLogic.isListening ? Icons.mic : Icons.mic_none, size: 36),
+            child: Icon(VoiceLogic.isListening.value ? Icons.mic : Icons.mic_none, size: 36),
           ),
         ));
   }
