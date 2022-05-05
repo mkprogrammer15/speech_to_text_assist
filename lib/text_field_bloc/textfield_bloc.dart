@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
-import 'package:speech_to_text_my_app/text_field_data_remote/text_field_data_model.dart';
 import 'package:speech_to_text_my_app/text_field_data_remote/text_field_data_source.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 
