@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 
 class MenuButton extends StatelessWidget {
-  const MenuButton({Key? key, required this.itemName, required this.engName, required this.language, required this.onTap}) : super(key: key);
+  const MenuButton({required this.itemName, required this.engName, required this.language, required this.onTap, Key? key}) : super(key: key);
 
   final String itemName;
 

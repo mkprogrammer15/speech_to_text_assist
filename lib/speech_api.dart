@@ -11,7 +11,7 @@ class SpeechApi {
 
   static Future<bool> record({required Function(String text) onResult, required ValueChanged<bool> onListening}) async {
     if (speech.isListening) {
-      speech.stop();
+      await speech.stop();
       return true;
     }
     final isAvailable = await speech.initialize(
@@ -19,14 +19,14 @@ class SpeechApi {
       onError: (e) => print('Error: $e'),
     );
     if (isAvailable) {
-      speech.listen(onResult: (value) => onResult(value.recognizedWords), localeId: currentLocaleId);
+      await speech.listen(onResult: (value) => onResult(value.recognizedWords), localeId: currentLocaleId);
     }
     return isAvailable;
   }
 
   static void logEvent(String eventDescription) {
     if (logEvents) {
-      var eventTime = DateTime.now().toIso8601String();
+      final eventTime = DateTime.now().toIso8601String();
       print('$eventTime $eventDescription');
     }
   }

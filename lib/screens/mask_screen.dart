@@ -29,13 +29,25 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
       toggleRecording(context);
     });
     detector!.onPhoneShake;
-    //askIfAllFieldsAreCorrect();
   }
 
   @override
   void dispose() {
     detector!.stopListening();
     super.dispose();
+  }
+
+  // double? value = 5;
+  ValueNotifier<double> timeToCheck = ValueNotifier<double>(1);
+  void setTimeForCircularProgressIndicator() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timeToCheck.value <= 0) {
+        timer.cancel();
+      } else {
+        timeToCheck.value = timeToCheck.value - 0.1;
+        print(timeToCheck.value);
+      }
+    });
   }
 
   @override
@@ -52,30 +64,45 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
                     const SizedBox(
                       height: 30,
                     ),
+                    ValueListenableBuilder<dynamic>(
+                      valueListenable: Utils.isConfirmed,
+                      builder: (context, dynamic value, child) {
+                        if (Utils.isConfirmed.value == false) {
+                          askIfAllFieldsAreCorrect();
+                          setTimeForCircularProgressIndicator();
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE.length : VoiceLogic.textFieldNameEN.length,
+                          itemBuilder: (_, index) {
+                            return SizedBox(
+                                width: 300,
+                                child: TextFormField(
+                                  focusNode: VoiceLogic.multiTextFieldModelList[index].focusNode,
+                                  controller: VoiceLogic.multiTextFieldModelList[index].controller,
+                                  decoration: InputDecoration(
+                                    hintText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
+                                    labelText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
+                                  ),
+                                ));
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
                     ValueListenableBuilder(
-                        valueListenable: Utils.isConfirmed,
-                        builder: (context, value, child) {
-                          if (!Utils.isConfirmed.value) {
-                            askIfAllFieldsAreCorrect();
-                          }
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE.length : VoiceLogic.textFieldNameEN.length,
-                            itemBuilder: (_, index) {
-                              return SizedBox(
-                                  width: 300,
-                                  child: TextFormField(
-                                    focusNode: VoiceLogic.multiTextFieldModelList[index].focusNode,
-                                    controller: VoiceLogic.multiTextFieldModelList[index].controller,
-                                    decoration: InputDecoration(
-                                      hintText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
-                                      labelText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
-                                    ),
-                                  ));
-                            },
-                          );
-                        }),
+                      valueListenable: timeToCheck,
+                      builder: (context, double value, child) {
+                        print(timeToCheck.value);
+                        return Visibility(
+                          visible: Utils.isFilled,
+                          child: CircularProgressIndicator(strokeWidth: 2, value: timeToCheck.value),
+                        );
+                      },
+                    )
                   ],
                 )),
           ),

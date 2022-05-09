@@ -258,7 +258,7 @@ mixin Utils {
     }
   }
 
-  static sortLocations() {
+  static void sortLocations() {
     final someList = VoiceLogic.cities;
     someList.value.sort();
     VoiceLogic.cities.value = [...someList.value];
@@ -274,8 +274,7 @@ mixin Utils {
     if (indexCommand == -1) {
       return 'null';
     } else {
-      newText = text.substring(indexAfter).trim();
-      return newText;
+      return newText = text.substring(indexAfter).trim();
     }
   }
 
@@ -295,17 +294,17 @@ mixin Utils {
   }
 
   static void checkRouteSlot(BuildContext context) {
-    const String locationsScreen = 'mk locations';
-    const String calculatorDE = 'rechner';
-    const String calculatorEN = 'calculator';
-    const String projekt1 = 'projekt1';
-    const String emails = 'emails';
-    const String dashBoard = 'dashboard';
-    const String maskScreenDE = 'maske';
-    const String maskScreenEN = 'mask';
+    const locationsScreen = 'mk locations';
+    const calculatorDE = 'rechner';
+    const calculatorEN = 'calculator';
+    const projekt1 = 'projekt1';
+    const emails = 'emails';
+    const dashBoard = 'dashboard';
+    const maskScreenDE = 'maske';
+    const maskScreenEN = 'mask';
 
-    List intents = [locationsScreen, calculatorDE, calculatorEN, projekt1, emails, dashBoard, maskScreenDE, maskScreenEN];
-    List matcher = [];
+    final intents = [locationsScreen, calculatorDE, calculatorEN, projekt1, emails, dashBoard, maskScreenDE, maskScreenEN];
+    List matcher = <String>[];
 
     if (newText == 'e-mails') {
       newText = 'emails';
@@ -371,16 +370,16 @@ mixin Utils {
   }
 
   static void checkMultiTextFieldSlot(String c) {
-    String speech = c.replaceAll(' ', '');
+    final speech = c.replaceAll(' ', '');
 
     List spokenList = <String>[];
-    List matchIntentsList = <String>[];
+    final matchIntentsList = <String>[];
     String speechNoCommands = speech.replaceAll('als', '');
     print(speechNoCommands);
-    List matchIntentsListNoSpaces = <String>[];
+    final matchIntentsListNoSpaces = <String>[];
 
-    for (int i = 0; i < VoiceLogic.textFieldList.length; i++) {
-      final String item = VoiceLogic.textFieldList[i].replaceAll(' ', '');
+    for (var i = 0; i < VoiceLogic.textFieldList.length; i++) {
+      final item = VoiceLogic.textFieldList[i].replaceAll(' ', '');
       matchIntentsListNoSpaces.add(item);
     }
 
@@ -436,7 +435,7 @@ mixin Utils {
     }
   }
 
-  static filterSomething(String letter) {
+  static List<String> filterSomething(String letter) {
     final someList = VoiceLogic.cities;
     final newList = ValueNotifier<List<String>>([]);
     for (final item in someList.value) {

@@ -90,94 +90,84 @@ class _MyHomePageState extends State<MyHomePage> with VoiceLogic {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Speech to text'),
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isChosenDE = true;
-                    isChosenEN = false;
-                    SpeechApi.currentLocaleId = 'de_DE';
-                  });
-                },
-                child: Text(
-                  'DE',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: isChosenDE == true ? Colors.black : Colors.white),
-                ),
+      appBar: AppBar(
+        title: const Text('Speech to text'),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isChosenDE = true;
+                  isChosenEN = false;
+                  SpeechApi.currentLocaleId = 'de_DE';
+                });
+              },
+              child: Text(
+                'DE',
+                style: TextStyle(fontWeight: FontWeight.bold, color: isChosenDE == true ? Colors.black : Colors.white),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                child: Text('EN',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: isChosenEN == true ? Colors.black : Colors.white,
-                    )),
-                onTap: () {
-                  setState(() {
-                    isChosenDE = false;
-                    isChosenEN = true;
-                    SpeechApi.currentLocaleId = 'en_EN';
-                  });
-                },
-              ),
-            )
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MenuButton(
-                  itemName: itemName1,
-                  engName: 'Emails',
-                  language: 'en_EN',
-                  onTap: () => Navigator.pushNamed(context, 'emails'),
-                ),
-                MenuButton(itemName: itemName2, engName: 'Project1', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'projekt1')),
-                MenuButton(itemName: itemName3, engName: 'mk locations', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'locations')),
-                MenuButton(itemName: itemName4, engName: 'Calculator', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'calculator')),
-                MenuButton(
-                  itemName: itemName5,
-                  engName: 'mask',
-                  language: 'en_EN',
-                  onTap: () {
-                    VoiceLogic.multiTextFieldModelList.clear();
-                    if (SpeechApi.currentLocaleId == 'de_DE') {
-                      VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
-                      VoiceLogic.getAllTextFields();
-                    } else {
-                      VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
-                      VoiceLogic.getAllTextFields();
-                    }
-
-                    Navigator.pushNamed(context, 'mask');
-                  },
-                )
-              ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: GestureDetector(
+              child: Text('EN',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isChosenEN == true ? Colors.black : Colors.white,
+                  )),
+              onTap: () {
+                setState(() {
+                  isChosenDE = false;
+                  isChosenEN = true;
+                  SpeechApi.currentLocaleId = 'en_EN';
+                });
+              },
+            ),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              MenuButton(
+                itemName: itemName1,
+                engName: 'Emails',
+                language: 'en_EN',
+                onTap: () => Navigator.pushNamed(context, 'emails'),
+              ),
+              MenuButton(itemName: itemName2, engName: 'Project1', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'projekt1')),
+              MenuButton(itemName: itemName3, engName: 'mk locations', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'locations')),
+              MenuButton(itemName: itemName4, engName: 'Calculator', language: 'en_EN', onTap: () => Navigator.pushNamed(context, 'calculator')),
+              MenuButton(
+                itemName: itemName5,
+                engName: 'mask',
+                language: 'en_EN',
+                onTap: () {
+                  VoiceLogic.multiTextFieldModelList.clear();
+                  if (SpeechApi.currentLocaleId == 'de_DE') {
+                    VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE;
+                    VoiceLogic.getAllTextFields();
+                  } else {
+                    VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN;
+                    VoiceLogic.getAllTextFields();
+                  }
+
+                  Navigator.pushNamed(context, 'mask');
+                },
+              )
+            ],
+          ),
         ),
-        floatingActionButton:
-            //MicroButton(isListening: isListening, toggleRecording: toggleRecording)
-            micButton(context, toggleRecording));
+      ),
+      floatingActionButton:
+          //MicroButton(isListening: isListening, toggleRecording: toggleRecording)
+          micButton(context, toggleRecording),
+    );
   }
 }
-
-// @UIApplicationMain
-// @objc class AppDelegate: FlutterAppDelegate{
-//   override func application(
-//     _ application: UIApplication,
-//     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-//   ) -> Bool {
-//     GeneratedPluginRegistrant.register(with: self)
-//     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-//   }
-// }
