@@ -29,25 +29,13 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
       toggleRecording(context);
     });
     detector!.onPhoneShake;
+    Utils.isConfirmed.value = false;
   }
 
   @override
   void dispose() {
     detector!.stopListening();
     super.dispose();
-  }
-
-  // double? value = 5;
-  ValueNotifier<double> timeToCheck = ValueNotifier<double>(1);
-  void setTimeForCircularProgressIndicator() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (timeToCheck.value <= 0) {
-        timer.cancel();
-      } else {
-        timeToCheck.value = timeToCheck.value - 0.1;
-        print(timeToCheck.value);
-      }
-    });
   }
 
   @override
@@ -69,7 +57,7 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
                       builder: (context, dynamic value, child) {
                         if (Utils.isConfirmed.value == false) {
                           askIfAllFieldsAreCorrect();
-                          setTimeForCircularProgressIndicator();
+                          //  VoiceLogic.setTimeForCircularProgressIndicator();
                         }
                         return ListView.builder(
                           shrinkWrap: true,
@@ -77,15 +65,16 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
                           itemCount: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE.length : VoiceLogic.textFieldNameEN.length,
                           itemBuilder: (_, index) {
                             return SizedBox(
-                                width: 300,
-                                child: TextFormField(
-                                  focusNode: VoiceLogic.multiTextFieldModelList[index].focusNode,
-                                  controller: VoiceLogic.multiTextFieldModelList[index].controller,
-                                  decoration: InputDecoration(
-                                    hintText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
-                                    labelText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
-                                  ),
-                                ));
+                              width: 300,
+                              child: TextFormField(
+                                focusNode: VoiceLogic.multiTextFieldModelList[index].focusNode,
+                                controller: VoiceLogic.multiTextFieldModelList[index].controller,
+                                decoration: InputDecoration(
+                                  hintText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
+                                  labelText: SpeechApi.currentLocaleId == 'de_DE' ? VoiceLogic.textFieldNameDE[index] : VoiceLogic.textFieldNameEN[index],
+                                ),
+                              ),
+                            );
                           },
                         );
                       },
@@ -94,12 +83,12 @@ class _MaskScreenState extends State<MaskScreen> with VoiceLogic {
                       height: 50,
                     ),
                     ValueListenableBuilder(
-                      valueListenable: timeToCheck,
+                      valueListenable: VoiceLogic.timeToCheck,
                       builder: (context, double value, child) {
-                        print(timeToCheck.value);
+                        print(VoiceLogic.timeToCheck.value);
                         return Visibility(
                           visible: Utils.isFilled,
-                          child: CircularProgressIndicator(strokeWidth: 2, value: timeToCheck.value),
+                          child: CircularProgressIndicator(strokeWidth: 2, value: VoiceLogic.timeToCheck.value),
                         );
                       },
                     )

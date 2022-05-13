@@ -8,17 +8,19 @@ class Projekt1Screen extends StatelessWidget {
 
   Widget listViewWidget() {
     return ListView(
-        controller: VoiceLogic.scrollController,
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        children: List.generate(
-            100,
-            (index) => Container(
-                  decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.blue)),
-                  child: ListTile(
-                    title: Text('$index'),
-                  ),
-                )));
+      controller: VoiceLogic.scrollController,
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      children: List.generate(
+        100,
+        (index) => Container(
+          decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.blue)),
+          child: ListTile(
+            title: Text('$index'),
+          ),
+        ),
+      ),
+    );
   }
 
   @override

@@ -21,13 +21,14 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
   static List<String> textFieldList = [];
   static List<MultiTextFieldModel> multiTextFieldModelList = [];
 
-  static List<String> textFieldNameDE = ['name', 'telefon', 'kommentar'];
-  static List<String> textFieldNameEN = ['name', 'phone', 'comment'];
+  static List<String> textFieldNameDE = ['name', 'telefon', 'kommentar', 'datum'];
+  static List<String> textFieldNameEN = ['name', 'phone', 'comment', 'date'];
   String response = 'Sind alle Angaben korrekt ?';
   static TextToSpeech tts = TextToSpeech();
   static Timer? timer;
   static ValueNotifier yes = ValueNotifier<bool>(false);
   static ValueNotifier<double?> durationForUserCheckFields = ValueNotifier<double?>(5);
+  static ValueNotifier<double> timeToCheck = ValueNotifier<double>(1);
 
   static void getAllTextFields() {
     for (var i = 0; i < VoiceLogic.textFieldList.length; i++) {
@@ -76,30 +77,81 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
     );
   }
 
+  // Future<void> askIfAllFieldsAreCorrect() async {
+  //   // VoiceLogic.yes.value = true;
+  //   if (Utils.isFilled) {
+  //     await Future<dynamic>.delayed(const Duration(seconds: 3));
+  //     await VoiceLogic.tts.speak('Sind alle Angaben korrekt?');
+  //     await Future.delayed(const Duration(seconds: 5), () async {
+  //       await toggleRecording(context);
+  //     });
+  //     await Future<dynamic>.delayed(const Duration(seconds: 8));
+  //     if (VoiceLogic.text.value == 'ja') {
+  //       await askWhatToDoNext();
+  //       return;
+  //     }
+  //     if (VoiceLogic.text.value == 'nein') {
+  //       await Future.delayed(const Duration(seconds: 5), () async {
+  //         await toggleRecording(context);
+  //       });
+  //     }
+  //     await Future<dynamic>.delayed(const Duration(seconds: 8));
+  //     await VoiceLogic.tts.speak('Sind alle Angaben korrekt?');
+  //     await Future.delayed(const Duration(seconds: 5), () async {
+  //       await toggleRecording(context);
+  //     });
+  //     await Future<dynamic>.delayed(const Duration(seconds: 8));
+  //   }
+  // }
+
+  static void setTimeForCircularProgressIndicator() {
+    timeToCheck.value = 1;
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timeToCheck.value <= 0) {
+        timer.cancel();
+      } else {
+        timeToCheck.value = timeToCheck.value - 0.1;
+        print(timeToCheck.value);
+      }
+    });
+  }
+
   Future<void> askIfAllFieldsAreCorrect() async {
-    // VoiceLogic.yes.value = true;
     if (Utils.isFilled) {
       await Future<dynamic>.delayed(const Duration(seconds: 3));
       await VoiceLogic.tts.speak('Sind alle Angaben korrekt?');
+      setTimeForCircularProgressIndicator();
       await Future.delayed(const Duration(seconds: 5), () async {
         await toggleRecording(context);
       });
-      await Future<dynamic>.delayed(const Duration(seconds: 8));
-      print(VoiceLogic.text.value);
-      if (VoiceLogic.text.value == 'ja') {
-        print('ok');
+      await Future<dynamic>.delayed(const Duration(seconds: 6));
+
+      if (VoiceLogic.text.value.contains('ja')) {
+        await askWhatToDoNext();
+        return;
       }
-      if (VoiceLogic.text.value == 'nein') {
+      do {
         await Future.delayed(const Duration(seconds: 5), () async {
           await toggleRecording(context);
         });
-      }
-      await Future<dynamic>.delayed(const Duration(seconds: 8));
-      await VoiceLogic.tts.speak('Sind alle Angaben korrekt?');
-      await Future.delayed(const Duration(seconds: 5), () async {
-        await toggleRecording(context);
-      });
-      await Future<dynamic>.delayed(const Duration(seconds: 8));
+        await Future<dynamic>.delayed(const Duration(seconds: 7));
+        await VoiceLogic.tts.speak('Sind alle Angaben korrekt?');
+        setTimeForCircularProgressIndicator();
+        await Future.delayed(const Duration(seconds: 5), () async {
+          await toggleRecording(context);
+        });
+        await Future<dynamic>.delayed(const Duration(seconds: 8));
+      } while (!VoiceLogic.text.value.contains('ja') || VoiceLogic.text.value.isEmpty);
+      await askWhatToDoNext();
     }
+  }
+
+  Future<void> askWhatToDoNext() async {
+    await Future<dynamic>.delayed(const Duration(seconds: 3));
+    await VoiceLogic.tts.speak('Was möchten Sie als nächstes tun?');
+    await Future.delayed(const Duration(seconds: 4), () async {
+      await toggleRecording(context);
+      return;
+    });
   }
 }

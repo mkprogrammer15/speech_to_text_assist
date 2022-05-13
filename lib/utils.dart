@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text_my_app/speech_api.dart';
 import 'package:speech_to_text_my_app/voice_logic.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class Command {
   static final all = <String>[
@@ -362,11 +363,51 @@ mixin Utils {
       newText = 'email';
     }
 
-    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+    for (var i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       if (VoiceLogic.multiTextFieldModelList[i].fieldName == newText) {
         VoiceLogic.multiTextFieldModelList[i].focusNode.requestFocus();
       }
     }
+  }
+
+  static final dateReg = RegExp('([0-9]{1,2}).{0,1}([a-zA-Z]*)([0-9]{4})');
+
+  static String convertDateField(String dateInput1) {
+    var newDateInput = '';
+    var convertedDate = '';
+
+    if (dateInput1.contains('.')) {
+      newDateInput = dateInput1.replaceAll('.', '').toLowerCase();
+    }
+
+    final germanMonths = <String, String>{
+      'januar': '.01.',
+      'februar': '.02.',
+      'märz': '.03.',
+      'april': '.04.',
+      'mai': '.05.',
+      'juni': '.06.',
+      'juli': '.07.',
+      'august': '.08.',
+      'september': '.09.',
+      'oktober': '.10.',
+      'november': '.11.',
+      'dezember': '.12.'
+    };
+
+    for (var i = 0; i < germanMonths.entries.length; i++) {
+      for (final entry in germanMonths.entries) {
+        if (newDateInput.contains(entry.key)) {
+          convertedDate = newDateInput.replaceAll(entry.key, entry.value);
+          print(convertedDate);
+        }
+      }
+    }
+    final strings = convertedDate.split('.');
+    strings[0] = strings[0].padLeft(2, '0');
+    strings[1] = '.${strings[1]}.';
+    final dateString = strings.join();
+    return dateString;
   }
 
   static void checkMultiTextFieldSlot(String c) {
@@ -374,8 +415,8 @@ mixin Utils {
 
     List spokenList = <String>[];
     final matchIntentsList = <String>[];
-    String speechNoCommands = speech.replaceAll('als', '');
-    print(speechNoCommands);
+    var speechNoCommands = speech.replaceAll('als', '');
+
     final matchIntentsListNoSpaces = <String>[];
 
     for (var i = 0; i < VoiceLogic.textFieldList.length; i++) {
@@ -386,12 +427,10 @@ mixin Utils {
     for (final item in matchIntentsListNoSpaces) {
       if (speechNoCommands.contains(item)) {
         matchIntentsList.add(item);
-        // speechNoCommands = speechNoCommands.replaceAll(item, '!');
       }
       speechNoCommands = speechNoCommands.replaceFirst(item, '!');
     }
 
-    print(matchIntentsList.toSet().toList());
     speechNoCommands = speechNoCommands.replaceFirst('!', '').replaceAll(',', ' ');
     spokenList = speechNoCommands.split('!');
 
@@ -403,8 +442,8 @@ mixin Utils {
       return;
     }
 
-    var number = <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10};
-    for (int i = 0; i < spokenList.length; i++) {
+    final number = <String, num>{'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10};
+    for (var i = 0; i < spokenList.length; i++) {
       for (final entry in number.entries) {
         if (spokenList[i].toString().contains(entry.key)) {
           spokenList[i].toString().replaceAll(entry.key, entry.value.toString());
@@ -412,25 +451,28 @@ mixin Utils {
       }
     }
 
-    var maap = Map<String, String>.fromIterables(matchIntentsList.toSet().toList() as List<String>, spokenList as List<String>);
-    print(maap);
+    final maap = Map<String, String>.fromIterables(matchIntentsList.toSet().toList(), spokenList as List<String>);
 
-    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+    for (var i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       VoiceLogic.multiTextFieldModelList[i].isActive = false;
     }
 
-    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+    for (var i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       for (final entry in maap.entries) {
         if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains(entry.key)) {
           VoiceLogic.multiTextFieldModelList[i].controller.text = entry.value;
+          if (VoiceLogic.multiTextFieldModelList[i].controller.text.contains(dateReg)) {
+            final dateStringConverted = convertDateField(entry.value);
+            VoiceLogic.multiTextFieldModelList[i].controller.text = dateStringConverted;
+          }
           VoiceLogic.multiTextFieldModelList[i].isActive = true;
         }
       }
     }
 
     for (var i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
-      if (VoiceLogic.multiTextFieldModelList[i].isActive == true) {
-        VoiceLogic.multiTextFieldModelList[i].requestFocus;
+      if (VoiceLogic.multiTextFieldModelList[i].isActive! == true) {
+        VoiceLogic.multiTextFieldModelList[i].requestFocus!;
       }
     }
   }
