@@ -32,7 +32,9 @@ class Command {
     'setze',
     'enter',
     'zeige alles',
-    'show all'
+    'show all',
+    'ja',
+    'nein'
   ];
 
   static const openDE = 'öffne';
@@ -228,26 +230,29 @@ mixin Utils {
           number: <String, num>{'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10});
       isFilled = true;
     }
+    if (text.isEmpty) {
+      VoiceLogic.tts.speak('Das habe ich leider nicht verstanden');
+    }
   }
 
   static void singleTextInput({required String birthday, required String amountPersons, required String text, required String command, required Map<String, num> number}) {
     VoiceLogic.textFieldInput = '';
-    String body = _getTextAfterCommand(text: text, command: command);
+    final body = _getTextAfterCommand(text: text, command: command);
 
-    for (int i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
+    for (var i = 0; i < VoiceLogic.multiTextFieldModelList.length; i++) {
       if (VoiceLogic.multiTextFieldModelList[i].focusNode.hasFocus) {
         VoiceLogic.multiTextFieldModelList[i].controller.text = body;
         if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('email')) {
-          String newBody = body.replaceAll(' ', '');
-          String lastChange = newBody.replaceAll('..', '@');
+          final newBody = body.replaceAll(' ', '');
+          final lastChange = newBody.replaceAll('..', '@');
           VoiceLogic.multiTextFieldModelList[i].controller.text = lastChange;
         }
         if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains(birthday)) {
-          String someNewBody = body.replaceAll(' ', '');
+          final someNewBody = body.replaceAll(' ', '');
           VoiceLogic.multiTextFieldModelList[i].controller.text = someNewBody;
         }
         if (VoiceLogic.multiTextFieldModelList[i].fieldName!.contains('id') || VoiceLogic.multiTextFieldModelList[i].fieldName!.contains(amountPersons)) {
-          String noSpace = body.replaceAll(' ', '');
+          final noSpace = body.replaceAll(' ', '');
           for (final item in number.entries) {
             if (noSpace.contains(item.key)) {
               final noWords = noSpace.replaceAll(item.key, item.value.toString());
@@ -286,10 +291,10 @@ mixin Utils {
   static void createTextFields(BuildContext context, String someText) {
     VoiceLogic.multiTextFieldModelList.clear();
     if (SpeechApi.currentLocaleId == 'de_DE') {
-      VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+      VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE;
       VoiceLogic.getAllTextFields();
     } else {
-      VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN as List<String>;
+      VoiceLogic.textFieldList = VoiceLogic.textFieldNameEN;
       VoiceLogic.getAllTextFields();
     }
   }
@@ -305,7 +310,7 @@ mixin Utils {
     const maskScreenEN = 'mask';
 
     final intents = [locationsScreen, calculatorDE, calculatorEN, projekt1, emails, dashBoard, maskScreenDE, maskScreenEN];
-    List matcher = <String>[];
+    final matcher = <String>[];
 
     if (newText == 'e-mails') {
       newText = 'emails';
@@ -338,7 +343,7 @@ mixin Utils {
         break;
       case maskScreenDE:
         VoiceLogic.multiTextFieldModelList.clear();
-        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE;
         VoiceLogic.getAllTextFields();
         Navigator.pushNamed(
           context,
@@ -348,13 +353,14 @@ mixin Utils {
 
       case maskScreenEN:
         VoiceLogic.multiTextFieldModelList.clear();
-        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE as List<String>;
+        VoiceLogic.textFieldList = VoiceLogic.textFieldNameDE;
         VoiceLogic.getAllTextFields();
         Navigator.pushNamed(context, 'mask');
         break;
 
       default:
-        print('Das habe ich jetzt nicht verstanden');
+        // VoiceLogic.tts.speak('Das habe ich jetzt nicht verstanden');
+        print('test');
     }
   }
 

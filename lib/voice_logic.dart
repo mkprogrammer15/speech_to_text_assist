@@ -44,18 +44,20 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
 
   void showSnackBarMessages() {
     VoiceLogic.text.value = '';
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: ValueListenableBuilder(
-        valueListenable: VoiceLogic.text,
-        builder: (context, value, child) => Text(
-          VoiceLogic.text.value,
-          style: const TextStyle(color: Colors.black),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: ValueListenableBuilder(
+          valueListenable: VoiceLogic.text,
+          builder: (context, value, child) => Text(
+            VoiceLogic.text.value,
+            style: const TextStyle(color: Colors.black),
+          ),
         ),
+        duration: const Duration(seconds: 7),
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(),
       ),
-      duration: const Duration(seconds: 7),
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(),
-    ));
+    );
   }
 
   Future toggleRecording(BuildContext context) {
@@ -77,33 +79,6 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
     );
   }
 
-  // Future<void> askIfAllFieldsAreCorrect() async {
-  //   // VoiceLogic.yes.value = true;
-  //   if (Utils.isFilled) {
-  //     await Future<dynamic>.delayed(const Duration(seconds: 3));
-  //     await VoiceLogic.tts.speak('Sind alle Angaben korrekt?');
-  //     await Future.delayed(const Duration(seconds: 5), () async {
-  //       await toggleRecording(context);
-  //     });
-  //     await Future<dynamic>.delayed(const Duration(seconds: 8));
-  //     if (VoiceLogic.text.value == 'ja') {
-  //       await askWhatToDoNext();
-  //       return;
-  //     }
-  //     if (VoiceLogic.text.value == 'nein') {
-  //       await Future.delayed(const Duration(seconds: 5), () async {
-  //         await toggleRecording(context);
-  //       });
-  //     }
-  //     await Future<dynamic>.delayed(const Duration(seconds: 8));
-  //     await VoiceLogic.tts.speak('Sind alle Angaben korrekt?');
-  //     await Future.delayed(const Duration(seconds: 5), () async {
-  //       await toggleRecording(context);
-  //     });
-  //     await Future<dynamic>.delayed(const Duration(seconds: 8));
-  //   }
-  // }
-
   static void setTimeForCircularProgressIndicator() {
     timeToCheck.value = 1;
     Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -111,7 +86,6 @@ mixin VoiceLogic<T extends StatefulWidget> on State<T> {
         timer.cancel();
       } else {
         timeToCheck.value = timeToCheck.value - 0.1;
-        print(timeToCheck.value);
       }
     });
   }
